@@ -152,12 +152,13 @@
 							<div class="menu-text">Dashboard</div>
 						</a>
 					</div>
+
 					<div class="menu-item">
-						<a href="<?= base_url() ?>Dashboard" class="menu-link">
+						<a href="<?= base_url() ?>izin" class="menu-link">
 							<div class="menu-icon">
-								<i class="fa fa-users"></i>
+								<i class="fa fa-list"></i>
 							</div>
-							<div class="menu-text">Data Karyawan</div>
+							<div class="menu-text">Lihat Data Absen</div>
 						</a>
 					</div>
 					<div class="menu-item">
@@ -169,11 +170,27 @@
 						</a>
 					</div>
 					<div class="menu-item">
+						<a href="<?= base_url() ?>izin" class="menu-link">
+							<div class="menu-icon">
+								<i class="fa fa-calendar"></i>
+							</div>
+							<div class="menu-text">Kelola Data Cuti</div>
+						</a>
+					</div>
+					<div class="menu-item">
+						<a href="<?= base_url() ?>Dashboard" class="menu-link">
+							<div class="menu-icon">
+								<i class="fa fa-users"></i>
+							</div>
+							<div class="menu-text">Data Pegawai</div>
+						</a>
+					</div>
+					<div class="menu-item">
 						<a href="<?= base_url() ?>user" class="menu-link">
 							<div class="menu-icon">
 								<i class="fa fa-user"></i>
 							</div>
-							<div class="menu-text">User</div>
+							<div class="menu-text">User Admin</div>
 						</a>
 					</div>
 
