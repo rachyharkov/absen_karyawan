@@ -130,8 +130,10 @@ class User extends CI_Controller
 				if ($row->photo == null || $row->photo == '') {
 				} else {
 
-					$target_file = './assets/assets/img/user/' . $row->photo;
-					unlink($target_file);
+					if($row->photo != 'default.jpg') {
+						$target_file = './assets/assets/img/user/' . $row->photo;
+						unlink($target_file);
+					}
 				}
 			} else {
 				$photo = $this->input->post('photo_lama');
@@ -167,8 +169,10 @@ class User extends CI_Controller
 		if ($row) {
 			if ($row->photo == null || $row->photo == '') {
 			} else {
-				$target_file = './assets/assets/img/user/' . $row->photo;
-				unlink($target_file);
+				if($row->photo != 'default.jpg') {
+					$target_file = './assets/assets/img/user/' . $row->photo;
+					unlink($target_file);
+				}
 			}
 
 			$this->User_model->delete($id);
@@ -176,6 +180,11 @@ class User extends CI_Controller
 			if ($error['code'] != 0) {
 				$this->session->set_flashdata('error', 'Tidak dapat dihapus data sudah berrelasi');
 			} else {
+
+				$findDataKaryawanUseThisUserId = $this->User_model->findDataKaryawanUseThisUserId($id);
+				if ($findDataKaryawanUseThisUserId) {
+					$this->User_model->empty_user_id_on_tbl_karyawan($id);
+				}
 				$this->session->set_flashdata('message', 'Delete Record Success');
 			}
 			redirect(site_url('user'));

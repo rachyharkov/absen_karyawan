@@ -50,7 +50,9 @@
 													<?php
 													echo anchor(site_url('user/update/' . $user->id), '<i class="fas fa-pencil-alt" aria-hidden="true"></i>', 'class="btn btn-primary btn-sm update_data"');
 													echo '  ';
-													echo anchor(site_url('user/delete/' . $user->id), '<i class="fas fa-trash-alt" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm delete_data" Delete', 'onclick="javasciprt: return confirm(\'Are You Sure ?\')"');
+													if ($user->id != 1) {
+														echo anchor(site_url('user/delete/' . $user->id), '<i class="fas fa-trash-alt" aria-hidden="true"></i>', 'class="btn btn-danger btn-sm delete_data" Delete', 'onclick="javasciprt: return confirm(\'Are You Sure ?\')"');
+													}
 													?>
 												</td>
 											</tr>
