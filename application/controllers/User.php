@@ -80,7 +80,6 @@ class User extends CI_Controller
 				'password' => sha1($this->input->post('password', TRUE)),
 				'level' => $this->input->post('level', TRUE),
 				'photo' => $photo,
-
 			);
 
 			$this->User_model->insert($data);
