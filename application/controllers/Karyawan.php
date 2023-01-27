@@ -385,6 +385,36 @@ class Karyawan extends CI_Controller
 		xlsEOF();
 		exit();
 	}
+
+	public function fetch_petugas() {
+		$datakaryawan = $this->Tbl_karyawan_model->get_all();
+		$data = array();
+		$no = 1;
+		foreach ($datakaryawan as $karyawan) {
+			$row = array();
+			$row[] = $no++;
+			$row[] = $karyawan->nama_lengkap;
+			$row[] = $karyawan->jenis_kelamin;
+			$row[] = $karyawan->alamat;
+			$row[] = $karyawan->nik;
+			$row[] = $karyawan->email;
+			$row[] = $karyawan->no_telp;
+			$row[] = $karyawan->username;
+			$row[] = $karyawan->password;
+			$row[] = $karyawan->status == 1 ? 'Aktif' : 'Tidak Aktif';
+			$row[] = '<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit" onclick="edit_karyawan('."'".$karyawan->id_karyawan."'".')"><i class="glyphicon glyphicon-pencil"></i> Edit</a>
+				  <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="Hapus" onclick="delete_karyawan('."'".$karyawan->id_karyawan."'".')"><i class="glyphicon glyphicon-trash"></i> Delete</a>';
+			$data[] = $row;
+		}
+		$output = array(
+			"draw" => $_POST['draw'],
+			"recordsTotal" => $this->Tbl_karyawan_model->count_all(),
+			"recordsFiltered" => $this->Tbl_karyawan_model->count_filtered(),
+			"data" => $data,
+		);
+		//output dalam format JSON
+		echo json_encode($output);
+	}
 }
 
 /* End of file Karyawan.php */

@@ -172,6 +172,14 @@
             </a>
           </div>
           <div class="menu-item">
+            <a href="<?= base_url() ?>lapangan" class="menu-link">
+              <div class="menu-icon">
+								<i class="fas fa-map-marked"></i>
+              </div>
+              <div class="menu-text">Lapangan</div>
+            </a>
+          </div>
+          <div class="menu-item">
             <a href="<?= base_url() ?>izin" class="menu-link">
               <div class="menu-icon">
                 <i class="fa fa-calendar"></i>
@@ -195,15 +203,6 @@
               <div class="menu-text">Data Karyawan</div>
             </a>
           </div>
-          <div class="menu-item">
-            <a href="<?= base_url() ?>user" class="menu-link">
-              <div class="menu-icon">
-                <i class="fa fa-user"></i>
-              </div>
-              <div class="menu-text">Akun Pengguna</div>
-            </a>
-          </div>
-
 
           <div class="menu-item d-flex">
             <a href="javascript:;" class="app-sidebar-minify-btn ms-auto" data-toggle="app-sidebar-minify"><i
