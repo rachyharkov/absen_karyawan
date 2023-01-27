@@ -19,7 +19,7 @@ class Manage_users extends CI_Controller
         $data = array(
             'manage_users_data' => $manage_users,
         );
-        $this->template->load('template','manage_users/tbl_users_list', $data);
+        $this->template->load('template','pengguna_berlevel/manage_users/tbl_users_list', $data);
     }
 
     public function read($id) 
@@ -39,10 +39,10 @@ class Manage_users extends CI_Controller
 				'photo' => $row->photo,
 				'status' => $row->status,
 			);
-            $this->template->load('template','manage_users/tbl_users_read', $data);
+            $this->template->load('template','pengguna_berlevel/manage_users/tbl_users_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(site_url('manage_users'));
+            redirect(site_url(levelUser($this->session->userdata('level')).'/manage_users'));
         }
     }
 
@@ -50,7 +50,7 @@ class Manage_users extends CI_Controller
     {
         $data = array(
             'button' => 'Create',
-            'action' => site_url('manage_users/create_action'),
+            'action' => site_url(levelUser($this->session->userdata('level')).'/manage_users/create_action'),
 			'id' => set_value('id'),
 			'nama_lengkap' => set_value('nama_lengkap'),
 			'jenis_kelamin' => set_value('jenis_kelamin'),
@@ -63,7 +63,7 @@ class Manage_users extends CI_Controller
 			'photo' => set_value('photo'),
 			'status' => set_value('status'),
 		);
-        $this->template->load('template','manage_users/tbl_users_form', $data);
+        $this->template->load('template','pengguna_berlevel/manage_users/tbl_users_form', $data);
     }
     
     public function create_action() 
@@ -102,7 +102,7 @@ class Manage_users extends CI_Controller
 
             $this->Manage_users_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success');
-            redirect(site_url('manage_users'));
+            redirect(site_url(levelUser($this->session->userdata('level')).'/manage_users'));
         }
     }
     
@@ -113,7 +113,7 @@ class Manage_users extends CI_Controller
         if ($row) {
             $data = array(
                 'button' => 'Update',
-                'action' => site_url('manage_users/update_action'),
+                'action' => site_url(levelUser($this->session->userdata('level')).'/manage_users/update_action'),
 				'id' => set_value('id', $row->id),
 				'nama_lengkap' => set_value('nama_lengkap', $row->nama_lengkap),
 				'jenis_kelamin' => set_value('jenis_kelamin', $row->jenis_kelamin),
@@ -126,10 +126,10 @@ class Manage_users extends CI_Controller
 				'photo' => set_value('photo', $row->photo),
 				'status' => set_value('status', $row->status),
 	    	);
-            $this->template->load('template','manage_users/tbl_users_form', $data);
+            $this->template->load('template','pengguna_berlevel/manage_users/tbl_users_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(site_url('manage_users'));
+            redirect(site_url(levelUser($this->session->userdata('level')).'/manage_users'));
         }
     }
     
@@ -174,7 +174,7 @@ class Manage_users extends CI_Controller
 
             $this->Manage_users_model->update($this->input->post('id', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
-            redirect(site_url('manage_users'));
+            redirect(site_url(levelUser($this->session->userdata('level')).'/manage_users'));
         }
     }
     
@@ -189,10 +189,10 @@ class Manage_users extends CI_Controller
 				unlink('./assets/assets/img/user/'.$row->photo);
 			}
             $this->session->set_flashdata('message', 'Delete Record Success');
-            redirect(site_url('manage_users'));
+            redirect(site_url(levelUser($this->session->userdata('level')).'/manage_users'));
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(site_url('manage_users'));
+            redirect(site_url(levelUser($this->session->userdata('level')).'/manage_users'));
         }
     }
 

@@ -4,26 +4,38 @@
 	{
 		public function login($post)
 		{
-			$datakaryawan = $this->db->select('*')->from('tbl_users')->where('username', $post['username'])->where('password', sha1($post['password']));
+			$datakaryawan = $this->db->get_where('tbl_users', ['username' => $post['username'], 'password' => sha1($post['password'])]);
 
-			if($datakaryawan->get()->num_rows() > 0) {
-				$query = $datakaryawan->get();
+			if($datakaryawan->num_rows() > 0) {
 				// add new data to $query
-				$query->row()->level = 4;
-				return $query;
+				return $datakaryawan;
 			} else {
 				$dataadmin = $this->db->select('*')->from('tbl_admin')->where('username', $post['username'])->where('password', sha1($post['password']));
 				return $dataadmin->get();
 			}
 		}
 
-		public function get($id = null)
+		public function get($id = null, $level = null)
 		{
 			$this->db->select('tbl_admin.*');
 			$this->db->from('tbl_admin');
 			if ($id != null) {
 				$this->db->where('id', $id);
+				$this->db->where('level', $level);
 			}
+			
+			$query = $this->db->get();
+			return $query;
+		}
+
+		public function get_user($id = null)
+		{
+			$this->db->select('tbl_users.*');
+			$this->db->from('tbl_users');
+			if ($id != null) {
+				$this->db->where('id', $id);
+			}
+			
 			$query = $this->db->get();
 			return $query;
 		}

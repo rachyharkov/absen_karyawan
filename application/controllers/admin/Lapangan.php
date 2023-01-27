@@ -19,7 +19,7 @@ class Lapangan extends CI_Controller
         $data = array(
             'lapangan_data' => $lapangan,
         );
-        $this->template->load('template','lapangan/tbl_lapangan_list', $data);
+        $this->template->load('template','pengguna_berlevel/lapangan/tbl_lapangan_list', $data);
     }
 
     public function read($id) 
@@ -37,10 +37,10 @@ class Lapangan extends CI_Controller
 		'jam_keluar_diizinkan' => $row->jam_keluar_diizinkan,
 		'petugas' => $row->petugas,
 	    );
-            $this->template->load('template','lapangan/tbl_lapangan_read', $data);
+            $this->template->load('template','pengguna_berlevel/lapangan/tbl_lapangan_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(site_url('lapangan'));
+            redirect(site_url(levelUser($this->session->userdata('level')).'/lapangan'));
         }
     }
 
@@ -48,7 +48,7 @@ class Lapangan extends CI_Controller
     {
         $data = array(
             'button' => 'Create',
-            'action' => site_url('lapangan/create_action'),
+            'action' => site_url(levelUser($this->session->userdata('level')).'/lapangan/create_action'),
 	    'id' => set_value('id'),
 	    'nama_lapangan' => set_value('nama_lapangan'),
 	    'latitude' => set_value('latitude'),
@@ -58,7 +58,7 @@ class Lapangan extends CI_Controller
 	    'jam_keluar_diizinkan' => set_value('jam_keluar_diizinkan'),
 	    'petugas' => set_value('petugas'),
 	);
-        $this->template->load('template','lapangan/tbl_lapangan_form', $data);
+        $this->template->load('template','pengguna_berlevel/lapangan/tbl_lapangan_form', $data);
     }
     
     public function create_action() 
@@ -80,7 +80,7 @@ class Lapangan extends CI_Controller
 
             $this->Tbl_lapangan_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success');
-            redirect(site_url('lapangan'));
+            redirect(site_url(levelUser($this->session->userdata('level')).'/lapangan'));
         }
     }
     
@@ -91,7 +91,7 @@ class Lapangan extends CI_Controller
         if ($row) {
             $data = array(
                 'button' => 'Update',
-                'action' => site_url('lapangan/update_action'),
+                'action' => site_url(levelUser($this->session->userdata('level')).'/lapangan/update_action'),
 		'id' => set_value('id', $row->id),
 		'nama_lapangan' => set_value('nama_lapangan', $row->nama_lapangan),
 		'latitude' => set_value('latitude', $row->latitude),
@@ -101,10 +101,10 @@ class Lapangan extends CI_Controller
 		'jam_keluar_diizinkan' => set_value('jam_keluar_diizinkan', $row->jam_keluar_diizinkan),
 		'petugas' => set_value('petugas', $row->petugas),
 	    );
-            $this->template->load('template','lapangan/tbl_lapangan_form', $data);
+            $this->template->load('template','pengguna_berlevel/lapangan/tbl_lapangan_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(site_url('lapangan'));
+            redirect(site_url(levelUser($this->session->userdata('level')).'/lapangan'));
         }
     }
     
@@ -127,7 +127,7 @@ class Lapangan extends CI_Controller
 
             $this->Tbl_lapangan_model->update($this->input->post('id', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
-            redirect(site_url('lapangan'));
+            redirect(site_url(levelUser($this->session->userdata('level')).'/lapangan'));
         }
     }
     
@@ -138,10 +138,10 @@ class Lapangan extends CI_Controller
         if ($row) {
             $this->Tbl_lapangan_model->delete(decrypt_url($id));
             $this->session->set_flashdata('message', 'Delete Record Success');
-            redirect(site_url('lapangan'));
+            redirect(site_url(levelUser($this->session->userdata('level')).'/lapangan'));
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(site_url('lapangan'));
+            redirect(site_url(levelUser($this->session->userdata('level')).'/lapangan'));
         }
     }
 

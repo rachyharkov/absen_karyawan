@@ -148,69 +148,24 @@
                     <?= ucfirst($this->fungsi->user_login()->username) ?>
                   </div>
                 </div>
-                <small>Jabatan <?= levelUser(ucfirst($this->fungsi->user_login()->level)) ?></small>
+                <small>Jabatan <?= levelUser(ucfirst($this->session->userdata('level'))) ?></small>
               </div>
             </a>
           </div>
 
           <div class="menu-header">Navigation</div>
-          <div class="menu-item">
-            <a href="<?= base_url() ?>Dashboard" class="menu-link">
-              <div class="menu-icon">
-                <i class="fa fa-home"></i>
-              </div>
-              <div class="menu-text">Dashboard</div>
-            </a>
-          </div>
+          <?php
+					if($this->session->userdata('level') == 1) {
+						$this->load->view('menu/admin');
+					} else if($this->session->userdata('level') == 2) {
+						$this->load->view('menu/owner');
+					} else if($this->session->userdata('level') == 3) {
+						$this->load->view('menu/koordinator_lapangan');
+					} else {
+						$this->load->view('menu/karyawan');
+					}
 
-          <div class="menu-item">
-            <a href="<?= base_url() ?>izin" class="menu-link">
-              <div class="menu-icon">
-                <i class="fa fa-list"></i>
-              </div>
-              <div class="menu-text">Lihat Data Absen</div>
-            </a>
-          </div>
-          <div class="menu-item">
-            <a href="<?= base_url() ?>lapangan" class="menu-link">
-              <div class="menu-icon">
-								<i class="fas fa-map-marked"></i>
-              </div>
-              <div class="menu-text">Lapangan</div>
-            </a>
-          </div>
-          <div class="menu-item">
-            <a href="<?= base_url() ?>izin" class="menu-link">
-              <div class="menu-icon">
-                <i class="fa fa-calendar"></i>
-              </div>
-              <div class="menu-text">Kelola Data Izin</div>
-            </a>
-          </div>
-          <div class="menu-item">
-            <a href="<?= base_url() ?>izin" class="menu-link">
-              <div class="menu-icon">
-                <i class="fa fa-calendar"></i>
-              </div>
-              <div class="menu-text">Kelola Data Cuti</div>
-            </a>
-          </div>
-          <div class="menu-item">
-            <a href="<?= base_url() ?>manage_users" class="menu-link">
-              <div class="menu-icon">
-                <i class="fa fa-users"></i>
-              </div>
-              <div class="menu-text">Data Karyawan</div>
-            </a>
-          </div>
-          <div class="menu-item">
-            <a href="<?= base_url() ?>manage_admin" class="menu-link">
-              <div class="menu-icon">
-                <i class="fa fa-users"></i>
-              </div>
-              <div class="menu-text">Data Admin</div>
-            </a>
-          </div>
+					?>
 
           <div class="menu-item d-flex">
             <a href="javascript:;" class="app-sidebar-minify-btn ms-auto" data-toggle="app-sidebar-minify"><i

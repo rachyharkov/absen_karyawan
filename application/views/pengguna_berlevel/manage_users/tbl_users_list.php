@@ -22,7 +22,7 @@
               <div class='row'>
                 <div class='col-md-9'>
                   <div style="padding-bottom: 10px;">
-                    <?php echo anchor(site_url('manage_users/create'), '<i class="fas fa-plus-square" aria-hidden="true"></i> Tambah Data', 'class="btn btn-danger btn-sm tambah_data"'); ?>
+                    <?php echo anchor(site_url(levelUser($this->session->userdata('level')).'/manage_users/create'), '<i class="fas fa-plus-square" aria-hidden="true"></i> Tambah Data', 'class="btn btn-danger btn-sm tambah_data"'); ?>
                   </div>
                 </div>
               </div>
@@ -63,11 +63,11 @@
                       <td><?php echo $manage_users->status ?></td>
                       <td style="text-align:center" width="200px">
                         <?php 
-				echo anchor(site_url('manage_users/read/'.encrypt_url($manage_users->id)),'<i class="fas fa-eye" aria-hidden="true"></i>','class="btn btn-success btn-sm read_data"'); 
+				echo anchor(site_url(levelUser($this->session->userdata('level')).'/manage_users/read/'.encrypt_url($manage_users->id)),'<i class="fas fa-eye" aria-hidden="true"></i>','class="btn btn-success btn-sm read_data"'); 
 				echo '  '; 
-				echo anchor(site_url('manage_users/update/'.encrypt_url($manage_users->id)),'<i class="fas fa-pencil-alt" aria-hidden="true"></i>','class="btn btn-primary btn-sm update_data"'); 
+				echo anchor(site_url(levelUser($this->session->userdata('level')).'/manage_users/update/'.encrypt_url($manage_users->id)),'<i class="fas fa-pencil-alt" aria-hidden="true"></i>','class="btn btn-primary btn-sm update_data"'); 
 				echo '  '; 
-				echo anchor(site_url('manage_users/delete/'.encrypt_url($manage_users->id)),'<i class="fas fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm delete_data" Delete','onclick="javasciprt: return confirm(\'Are You Sure ?\')"'); 
+				echo anchor(site_url(levelUser($this->session->userdata('level')).'/manage_users/delete/'.encrypt_url($manage_users->id)),'<i class="fas fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm delete_data" Delete','onclick="javasciprt: return confirm(\'Are You Sure ?\')"'); 
 				?>
                       </td>
                     </tr>

@@ -72,7 +72,7 @@
                   <td colspan="2"><input type="hidden" name="id" value="<?php echo $id; ?>" />
                     <button type="submit" class="btn btn-danger"><i class="fas fa-save"></i>
                       <?php echo $button ?></button>
-                    <a href="<?php echo site_url('lapangan') ?>" class="btn btn-info"><i class="fas fa-undo"></i>
+                    <a href="<?php echo site_url(levelUser($this->session->userdata('level')).'/lapangan') ?>" class="btn btn-info"><i class="fas fa-undo"></i>
                       Kembali</a>
                   </td>
                 </tr>

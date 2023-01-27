@@ -32,10 +32,14 @@ class Auth extends CI_Controller
 				$row = $query->row();
 				$params = array(
 					'userid' => $row->id,
-					'level' => $row->level
+					'level' => isset($row->level) ?? 4
 				);
+				
+				$this->load->helper('fungsi');
+				$levelusernya = levelUser($params['level']);
+
 				$this->session->set_userdata($params);
-				echo "<script>window.location='" . site_url('dashboard') . "'</script>";
+				echo "<script>window.location='". site_url($levelusernya.'/dashboard') ."'</script>";
 			} else {
 				$this->session->set_flashdata('gagal', 'Login gagal, username atau password salah');
 				redirect(site_url('auth'));
