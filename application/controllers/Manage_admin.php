@@ -64,14 +64,14 @@ class Manage_admin extends CI_Controller
         } else {
             $data = array(
 				'username' => $this->input->post('username',TRUE),
-				'password' => $this->input->post('password',TRUE),
+				'password' => sha1($this->input->post('password',TRUE)),
 				'level' => $this->input->post('level',TRUE),
 				'photo' => $this->input->post('photo',TRUE),
 	    	);
 
 			$photo = 'default.jpg';
 
-			if(!empty($_FILES['foto']['name']))
+			if(!empty($_FILES['photo']['name']))
 			{
 				$config['upload_path']      = './assets/assets/img/user';
 				$config['allowed_types']    = 'jpg|png|jpeg';
@@ -79,7 +79,7 @@ class Manage_admin extends CI_Controller
 				$config['file_name']        = 'File-' . date('ymd') . '-' . substr(sha1(rand()), 0, 10);
 				$this->load->library('upload', $config);
 				$this->upload->initialize($config);
-				$this->upload->do_upload("foto");
+				$this->upload->do_upload("photo");
 				$dataphoto = $this->upload->data();
 				$photo = $dataphoto['file_name'];
 				$data['photo'] = $photo;
@@ -100,12 +100,12 @@ class Manage_admin extends CI_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url('manage_admin/update_action'),
-		'id' => set_value('id', $row->id),
-		'username' => set_value('username', $row->username),
-		'password' => set_value('password', $row->password),
-		'level' => set_value('level', $row->level),
-		'photo' => set_value('photo', $row->photo),
-	    );
+				'id' => set_value('id', $row->id),
+				'username' => set_value('username', $row->username),
+				// 'password' => set_value('password', $row->password),
+				'level' => set_value('level', $row->level),
+				'photo' => set_value('photo', $row->photo),
+	    	);
             $this->template->load('template','manage_admin/tbl_admin_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
@@ -115,17 +115,40 @@ class Manage_admin extends CI_Controller
     
     public function update_action() 
     {
-        $this->_rules();
+        $this->_update_rules();
 
         if ($this->form_validation->run() == FALSE) {
 			$this->update(encrypt_url($this->input->post('id', TRUE)));
         } else {
             $data = array(
-		'username' => $this->input->post('username',TRUE),
-		'password' => $this->input->post('password',TRUE),
-		'level' => $this->input->post('level',TRUE),
-		'photo' => $this->input->post('photo',TRUE),
-	    );
+				'username' => $this->input->post('username',TRUE),
+				'password' => sha1($this->input->post('password',TRUE)),
+				'level' => $this->input->post('level',TRUE),
+				'photo' => $this->input->post('old_photo',TRUE),
+		    );
+
+
+			if(!empty($_FILES['photo']['name']))
+			{
+				$config['upload_path']      = './assets/assets/img/user';
+				$config['allowed_types']    = 'jpg|png|jpeg';
+				$config['max_size']         = 10048;
+				$config['file_name']        = 'File-' . date('ymd') . '-' . substr(sha1(rand()), 0, 10);
+				$this->load->library('upload', $config);
+				$this->upload->initialize($config);
+				$this->upload->do_upload("photo");
+				$dataphoto = $this->upload->data();
+				$photo = $dataphoto['file_name'];
+				$data['photo'] = $photo;
+
+				$old_photo = $this->input->post('old_photo');
+				if($old_photo != 'default.jpg')
+				{
+					unlink('./assets/assets/img/user/'.$old_photo);
+				}
+			}
+
+
 
             $this->Manage_admin_model->update($this->input->post('id', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
@@ -149,13 +172,22 @@ class Manage_admin extends CI_Controller
 
     public function _rules() 
     {
-	$this->form_validation->set_rules('username', 'username', 'trim|required');
-	$this->form_validation->set_rules('password', 'password', 'trim|required');
-	$this->form_validation->set_rules('level', 'level', 'trim|required');
+		$this->form_validation->set_rules('username', 'username', 'trim|required');
+		$this->form_validation->set_rules('password', 'password', 'trim|required');
+		$this->form_validation->set_rules('level', 'level', 'trim|required');
 
-	$this->form_validation->set_rules('id', 'id', 'trim');
-	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+		$this->form_validation->set_rules('id', 'id', 'trim');
+		$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
+
+	public function _update_rules() 
+	{
+		$this->form_validation->set_rules('username', 'username', 'trim|required');
+		$this->form_validation->set_rules('level', 'level', 'trim|required');
+
+		$this->form_validation->set_rules('id', 'id', 'trim');
+		$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+	}
 
 }
 

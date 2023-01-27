@@ -17,7 +17,7 @@
       </div>
       <div class="panel-body">
 
-        <form action="<?php echo $action; ?>" method="post">
+        <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">
           <thead>
             <table id="data-table-default" class="table  table-bordered table-hover table-td-valign-middle">
               <tr>
@@ -28,7 +28,9 @@
               <tr>
                 <td>Password <?php echo form_error('password') ?></td>
                 <td><input type="password" class="form-control" name="password" id="password" placeholder="Password"
-                    value="<?php echo $password; ?>" /></td>
+                    value="" />
+										<small class="text-danger">* Kosongkan jika tidak ingin mengubah password</small>
+								</td>
               </tr>
               <tr>
                 <td>Level <?php echo form_error('level') ?></td>
@@ -56,8 +58,8 @@
               <tr>
                 <td>Photo <?php echo form_error('photo') ?></td>
                 <td>
-									<a href="#modal-dialog" data-bs-toggle="modal"><img src="<?php echo base_url(); ?>assets/assets/img/user/<?= $photo ?? 'default.jpg'; ?>" style="width: 150px;height: 150px;border-radius: 5%;"></img></a>
-									<input type="hidden" name="photo_lama" value="<?= $photo ?>">
+									<a href="#modal-dialog" data-bs-toggle="modal" id="preview"><img src="<?php echo base_url(); ?>assets/assets/img/user/<?= $photo ?? 'default.jpg'; ?>" style="width: 150px;height: 150px;border-radius: 5%;"></img></a>
+									<input type="hidden" name="old_photo" value="<?= $photo ?>">
 									<p style="color:white">Note :Pilih photo Jika Ingin Merubah photo</p>
 									<input type="file" class="form-control" name="photo" id="photo" placeholder="photo" value="" onchange="return validasiEkstensi()" />
 								</td>
@@ -112,7 +114,7 @@
 			if (inputFile.files && inputFile.files[0]) {
 				var reader = new FileReader();
 				reader.onload = function(e) {
-					document.getElementById('preview').innerHTML = '<iframe src="' + e.target.result + '" style="height:400px; width:600px"/>';
+					document.getElementById('preview').innerHTML = '<img src="' + e.target.result + '" style="width: 150px;height: 150px;border-radius: 5%;"/>';
 				};
 				reader.readAsDataURL(inputFile.files[0]);
 			}
