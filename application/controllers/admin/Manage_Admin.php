@@ -86,7 +86,7 @@ class Manage_admin extends CI_Controller
 
             $this->Manage_admin_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success');
-            redirect(site_url('manage_admin'));
+            redirect(site_url(levelUser($this->session->userdata('level')).'/manage_admin'));
         }
     }
     
@@ -190,6 +190,24 @@ class Manage_admin extends CI_Controller
 
 		$this->form_validation->set_rules('id', 'id', 'trim');
 		$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+	}
+
+	public function find_petugas() {
+		$petugas_username = $this->input->get('q');
+		$data = $this->Manage_admin_model->find_admin_by_username($petugas_username);
+
+		// output for selectize output
+		$output = [
+			'data' => [],
+			'more' => false,
+		];
+		foreach ($data as $row) {
+			$output['data'][] = [
+				'id' => $row->id,
+				'text' => $row->username,
+			];
+		}
+		echo json_encode($output);
 	}
 
 }

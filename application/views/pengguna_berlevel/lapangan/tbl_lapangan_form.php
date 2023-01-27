@@ -116,14 +116,14 @@
 		$('#petugas').selectize({
 			// fetch data from api
 			valueField: 'id',
-			labelField: 'nama_karyawan',
-			searchField: 'nama_karyawan',
+			labelField: 'text',
+			searchField: 'text',
 			options: [],
 			create: false,
 			load: function(query, callback) {
 				if (!query.length) return callback();
 				$.ajax({
-					url: '<?php echo base_url('karyawan/fetch_petugas') ?>',
+					url: '<?php echo base_url('admin/manage_admin/find_petugas') ?>',
 					type: 'GET',
 					dataType: 'json',
 					data: {
@@ -261,6 +261,20 @@
 
 			getToLoc($('#latitude').val(), $('#longitude').val(), $('#search-loc').val())
 		})
+
+		<?php
+		if($button == 'Update') {
+			$getdataadmin = $this->db->get_where('tbl_admin', ['id' => $petugas])->row();
+			$idnya = $getdataadmin->id;
+			$usernamenya = $getdataadmin->username;
+			?>
+				$('#petugas')[0].selectize.addOption({id: '<?php echo $idnya ?>', text: '<?php echo $usernamenya ?>'});
+				
+				$('#petugas')[0].selectize.setValue('<?php echo $idnya ?>');
+				addRadius($('#radius_diizinkan').val());
+			<?php
+		}
+		?>
   })
   </script>
 </div>
