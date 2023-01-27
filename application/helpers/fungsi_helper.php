@@ -56,14 +56,3 @@ function levelUser($level_id) {
 
 	return 'Karyawan';
 }
-
-function checkApakahPunyaAkun($id) {
-	$ci = &get_instance();
-	$ci->load->model('User_model');
-	$cek = $ci->User_model->get_by_id($id);
-	if($cek) {
-		return true;
-	} else {
-		return false;
-	}
-}

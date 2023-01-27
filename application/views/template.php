@@ -196,11 +196,19 @@
             </a>
           </div>
           <div class="menu-item">
-            <a href="<?= base_url() ?>karyawan" class="menu-link">
+            <a href="<?= base_url() ?>manage_users" class="menu-link">
               <div class="menu-icon">
                 <i class="fa fa-users"></i>
               </div>
               <div class="menu-text">Data Karyawan</div>
+            </a>
+          </div>
+          <div class="menu-item">
+            <a href="<?= base_url() ?>manage_admin" class="menu-link">
+              <div class="menu-icon">
+                <i class="fa fa-users"></i>
+              </div>
+              <div class="menu-text">Data Admin</div>
             </a>
           </div>
 
