@@ -33,7 +33,7 @@
                   <thead>
                     <tr>
                       <th>No</th>
-                      <th>Id User</th>
+                      <th>Punya Akun</th>
                       <th>Nama Lengkap</th>
                       <th>Jenis Kelamin</th>
                       <th>Alamat</th>
@@ -49,7 +49,7 @@
                 ?>
                     <tr>
                       <td><?= $no++?></td>
-                      <td><?php echo $karyawan->id_user ?></td>
+                      <td><?= $karyawan->id_user ? '<label class="badge bg-success">Sudah</label>' : '<label class="badge bg-danger">Belum</label>' ?></td>
                       <td><?php echo $karyawan->nama_lengkap ?></td>
                       <td><?php echo $karyawan->jenis_kelamin ?></td>
                       <td><?php echo $karyawan->alamat ?></td>

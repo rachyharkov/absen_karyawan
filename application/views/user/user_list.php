@@ -45,7 +45,7 @@
 												</td>
 												</a>
 												<td><?php echo $user->username ?></td>
-												<td><?php echo $user->level ?></td>
+												<td><?php echo levelUser($user->level) ?></td>
 												<td style="text-align:center" width="200px">
 													<?php
 													echo anchor(site_url('user/update/' . $user->id), '<i class="fas fa-pencil-alt" aria-hidden="true"></i>', 'class="btn btn-primary btn-sm update_data"');

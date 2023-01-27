@@ -200,7 +200,7 @@
               <div class="menu-icon">
                 <i class="fa fa-user"></i>
               </div>
-              <div class="menu-text">User Admin</div>
+              <div class="menu-text">Akun Pengguna</div>
             </a>
           </div>
 
