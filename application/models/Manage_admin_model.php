@@ -61,8 +61,11 @@ class Manage_admin_model extends CI_Model
         $this->db->delete($this->table);
     }
 
-	function find_admin_by_username($username){
+	function find_admin_by_username($username, $level = null){
 		$this->db->like('username', $username);
+		if($level != null){
+			$this->db->where('level', $level);
+		}
 		$query = $this->db->get('tbl_admin');
 		return $query->result();
 	}

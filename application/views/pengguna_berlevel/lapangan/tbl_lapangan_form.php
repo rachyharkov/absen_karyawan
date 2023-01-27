@@ -65,6 +65,7 @@
 												<option value="<?php echo $value->id ?>" <?php echo $value->id == $petugas ? 'selected' : '' ?>><?php echo $value->nama ?></option>
 											<?php } ?>
 										</select>
+										<span class="text-danger">*Petugas yang dipilih hanya yang levelnya "Koordinator Lapangan"</span>
 									</td>
                 </tr>
                 <tr>

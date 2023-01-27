@@ -194,7 +194,7 @@ class Manage_admin extends CI_Controller
 
 	public function find_petugas() {
 		$petugas_username = $this->input->get('q');
-		$data = $this->Manage_admin_model->find_admin_by_username($petugas_username);
+		$data = $this->Manage_admin_model->find_admin_by_username($petugas_username, 3); // 3 = koordinator_lapangan
 
 		// output for selectize output
 		$output = [
