@@ -29,7 +29,14 @@
                 <td>Password <?php echo form_error('password') ?></td>
                 <td><input type="password" class="form-control" name="password" id="password" placeholder="Password"
                     value="" />
-										<small class="text-danger">* Kosongkan jika tidak ingin mengubah password</small>
+										<?php
+										if($button == 'Update') {
+											?>
+												<small class="text-danger">* Kosongkan jika tidak ingin mengubah password</small>
+												<input type="hidden" name="old_password" value="<?php echo $password; ?>">
+											<?php
+										}
+										?>
 								</td>
               </tr>
               <tr>

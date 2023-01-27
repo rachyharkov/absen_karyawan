@@ -66,10 +66,8 @@ class Manage_admin extends CI_Controller
 				'username' => $this->input->post('username',TRUE),
 				'password' => sha1($this->input->post('password',TRUE)),
 				'level' => $this->input->post('level',TRUE),
-				'photo' => $this->input->post('photo',TRUE),
+				'photo' => 'default.jpg'
 	    	);
-
-			$photo = 'default.jpg';
 
 			if(!empty($_FILES['photo']['name']))
 			{
@@ -102,7 +100,7 @@ class Manage_admin extends CI_Controller
                 'action' => site_url('manage_admin/update_action'),
 				'id' => set_value('id', $row->id),
 				'username' => set_value('username', $row->username),
-				// 'password' => set_value('password', $row->password),
+				'password' => set_value('password', $row->password),
 				'level' => set_value('level', $row->level),
 				'photo' => set_value('photo', $row->photo),
 	    	);
@@ -122,7 +120,7 @@ class Manage_admin extends CI_Controller
         } else {
             $data = array(
 				'username' => $this->input->post('username',TRUE),
-				'password' => sha1($this->input->post('password',TRUE)),
+				'password' => $this->input->post('password',TRUE) ? sha1($this->input->post('password',TRUE)) : $this->input->post('old_password',TRUE),
 				'level' => $this->input->post('level',TRUE),
 				'photo' => $this->input->post('old_photo',TRUE),
 		    );
@@ -161,7 +159,12 @@ class Manage_admin extends CI_Controller
         $row = $this->Manage_admin_model->get_by_id(decrypt_url($id));
 
         if ($row) {
-            $this->Manage_admin_model->delete(decrypt_url($id));
+			$this->Manage_admin_model->delete(decrypt_url($id));
+
+			if($row->photo != 'default.jpg')
+			{
+				unlink('./assets/assets/img/user/'.$row->photo);
+			}
             $this->session->set_flashdata('message', 'Delete Record Success');
             redirect(site_url('manage_admin'));
         } else {

@@ -48,7 +48,9 @@
 				echo '  '; 
 				echo anchor(site_url('manage_admin/update/'.encrypt_url($manage_admin->id)),'<i class="fas fa-pencil-alt" aria-hidden="true"></i>','class="btn btn-primary btn-sm update_data"'); 
 				echo '  '; 
-				echo anchor(site_url('manage_admin/delete/'.encrypt_url($manage_admin->id)),'<i class="fas fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm delete_data" Delete','onclick="javasciprt: return confirm(\'Are You Sure ?\')"'); 
+				if($manage_admin->username != 'admin') {
+					echo anchor(site_url('manage_admin/delete/'.encrypt_url($manage_admin->id)),'<i class="fas fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm delete_data" Delete','onclick="javasciprt: return confirm(\'Are You Sure ?\')"'); 
+				}
 				?>
 			</td>
 		</tr>
