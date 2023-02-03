@@ -29,6 +29,12 @@ function cek_login_aja()
 	}
 }
 
+function cek_asal_lapangan($user_id) {
+	$ci = &get_instance();
+	$ci->load->model('Manage_users_model');
+	$lapangan = $ci->Manage_users_model->getLapanganByUserId($user_id)->row();
+	return $lapangan->id_lapangan;
+}
 
 //format rupiah
 function rupiah($angka = null)

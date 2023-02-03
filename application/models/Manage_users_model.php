@@ -67,6 +67,11 @@ class Manage_users_model extends CI_Model
         $this->db->delete($this->table);
     }
 
+	function getLapanganByUserId($user_id) {
+		$this->db->where('id_users', $user_id);
+		return $this->db->get('tbl_penempatan_karyawan');
+	}
+
 }
 
 /* End of file Manage_users_model.php */
