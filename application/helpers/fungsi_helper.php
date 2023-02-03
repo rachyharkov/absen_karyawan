@@ -36,27 +36,27 @@ function cek_asal_lapangan($user_id) {
 	return $lapangan->id_lapangan;
 }
 
-function apakahDataIzinAda($tanggal, $user_id, $jenis_izin) {
+function apakahDataIzinAda($tanggal, $user_id) {
 	$ci = &get_instance();
 	$cek = null;
-	if($jenis_izin == 'izin') {
-		$ci->load->model('Tbl_izin_model');
-		$cek = $ci->Tbl_izin_model->get_by_tanggal_user_id($tanggal, $user_id);
-	}
 
-	if($jenis_izin == 'cuti') {
-		$ci->load->model('Tbl_cuti_model');
-		$cek = $ci->Tbl_cuti_model->get_by_tanggal_user_id($tanggal, $user_id);
-	}
+	$ci->load->model('Tbl_izin_model');
+	$ci->load->model('Tbl_cuti_model');
+	$ci->load->model('Tbl_sakit_model');
+	$cek1 = $ci->Tbl_izin_model->get_by_tanggal_user_id($tanggal, $user_id);
+	$cek2 = $ci->Tbl_cuti_model->get_by_tanggal_user_id($tanggal, $user_id);
+	$cek3 = $ci->Tbl_sakit_model->get_by_tanggal_user_id($tanggal, $user_id);
 
-	if($jenis_izin == 'sakit') {
-		$ci->load->model('Tbl_sakit_model');
-		$cek = $ci->Tbl_sakit_model->get_by_tanggal_user_id($tanggal, $user_id);
-	}
 
 	// print_r($cek->num_rows());
 
-	if($cek->num_rows() > 0) {
+	if($cek1->num_rows() > 0) {
+		return 'ada';
+	}
+	if($cek2->num_rows() > 0) {
+		return 'ada';
+	}
+	if($cek3->num_rows() > 0) {
 		return 'ada';
 	}
 

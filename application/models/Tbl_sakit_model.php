@@ -18,6 +18,8 @@ class Tbl_sakit_model extends CI_Model
     // get all
     function get_all()
     {
+		$this->db->select('tbl_sakit.*, tbl_users.nama_lengkap');
+		$this->db->join('tbl_users', 'tbl_users.id = tbl_sakit.users_id');
         $this->db->order_by($this->id, $this->order);
         return $this->db->get($this->table)->result();
     }

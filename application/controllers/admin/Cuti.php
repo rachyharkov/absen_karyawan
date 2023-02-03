@@ -65,7 +65,7 @@ class Cuti extends CI_Controller
 			$user_id = $this->input->post('users_id',TRUE);
 			$tanggal = date('Y-m-d', strtotime($this->input->post('tanggal',TRUE)));
 			
-			$apakahAdaDataDitanggalSegitu = apakahDataIzinAda($tanggal, $user_id, 'cuti');
+			$apakahAdaDataDitanggalSegitu = apakahDataIzinAda($tanggal, $user_id);
 			if ($apakahAdaDataDitanggalSegitu == 'ada') {
 				$this->session->set_flashdata('error', 'Tidak dapat menyimpan pada tanggal tersebut karena Data Izin/Absen Sudah Ada');
 				$this->create();
@@ -117,7 +117,7 @@ class Cuti extends CI_Controller
 			$user_id = $this->input->post('users_id',TRUE);
 			$tanggal = date('Y-m-d', strtotime($this->input->post('tanggal',TRUE)));
 			
-			$apakahAdaDataDitanggalSegitu = apakahDataIzinAda($tanggal, $user_id, 'cuti');
+			$apakahAdaDataDitanggalSegitu = apakahDataIzinAda($tanggal, $user_id);
 			if ($apakahAdaDataDitanggalSegitu == 'ada') {
 				$this->session->set_flashdata('error', 'Tidak dapat menyimpan pada tanggal tersebut karena Data Izin/Absen Sudah Ada');
 				$this->update(encrypt_url($this->input->post('id', TRUE)));

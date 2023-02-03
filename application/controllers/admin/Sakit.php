@@ -39,7 +39,7 @@ class Sakit extends CI_Controller
             $this->template->load('template','sakit/tbl_sakit_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(site_url(levelUser($this->session->userdata('level')).'sakit'));
+            redirect(site_url(levelUser($this->session->userdata('level')).'/sakit'));
         }
     }
 
@@ -66,14 +66,23 @@ class Sakit extends CI_Controller
         if ($this->form_validation->run() == FALSE) {
             $this->create();
         } else {
+			$user_id = $this->input->post('users_id',TRUE);
+			$tanggal = date('Y-m-d', strtotime($this->input->post('tanggal',TRUE)));
+			
+			$apakahAdaDataDitanggalSegitu = apakahDataIzinAda($tanggal, $user_id);
+			if ($apakahAdaDataDitanggalSegitu == 'ada') {
+				$this->session->set_flashdata('error', 'Tidak dapat menyimpan pada tanggal tersebut karena Data Izin/Absen Sudah Ada');
+				$this->create();
+				return;
+			}
+
             $data = array(
-		'users_id' => $this->input->post('users_id',TRUE),
-		'tanggal' => $this->input->post('tanggal',TRUE),
-		'alasan' => $this->input->post('alasan',TRUE),
-		'status' => $this->input->post('status',TRUE),
-		'created_at' => $this->input->post('created_at',TRUE),
-		'updated_at' => $this->input->post('updated_at',TRUE),
-	    );
+				'users_id' => $this->input->post('users_id',TRUE),
+				'tanggal' => date('Y-m-d', strtotime($tanggal)),
+				'alasan' => $this->input->post('alasan',TRUE),
+				'created_at' => date('Y-m-d H:i:s'),
+				'updated_at' => date('Y-m-d H:i:s'),
+			);
 
             $this->Tbl_sakit_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success');
@@ -100,7 +109,7 @@ class Sakit extends CI_Controller
             $this->template->load('template','sakit/tbl_sakit_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(levelUser($this->session->userdata('level')).'sakit');
+            redirect(levelUser($this->session->userdata('level')).'/sakit');
         }
     }
     
@@ -111,14 +120,23 @@ class Sakit extends CI_Controller
         if ($this->form_validation->run() == FALSE) {
 			$this->update(encrypt_url($this->input->post('id', TRUE)));
         } else {
+			$user_id = $this->input->post('users_id',TRUE);
+			$tanggal = date('Y-m-d', strtotime($this->input->post('tanggal',TRUE)));
+			
+			$apakahAdaDataDitanggalSegitu = apakahDataIzinAda($tanggal, $user_id);
+			if ($apakahAdaDataDitanggalSegitu == 'ada') {
+				$this->session->set_flashdata('error', 'Tidak dapat menyimpan pada tanggal tersebut karena Data Izin/Absen Sudah Ada');
+				$this->create();
+				return;
+			}
+
             $data = array(
-		'users_id' => $this->input->post('users_id',TRUE),
-		'tanggal' => $this->input->post('tanggal',TRUE),
-		'alasan' => $this->input->post('alasan',TRUE),
-		'status' => $this->input->post('status',TRUE),
-		'created_at' => $this->input->post('created_at',TRUE),
-		'updated_at' => $this->input->post('updated_at',TRUE),
-	    );
+				'users_id' => $this->input->post('users_id',TRUE),
+				'tanggal' => date('Y-m-d', strtotime($tanggal)),
+				'alasan' => $this->input->post('alasan',TRUE),
+				'created_at' => date('Y-m-d H:i:s'),
+				'updated_at' => date('Y-m-d H:i:s'),
+			);
 
             $this->Tbl_sakit_model->update($this->input->post('id', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
@@ -133,12 +151,25 @@ class Sakit extends CI_Controller
         if ($row) {
             $this->Tbl_sakit_model->delete(decrypt_url($id));
             $this->session->set_flashdata('message', 'Delete Record Success');
-            redirect(levelUser($this->session->userdata('level')).'sakit');
+            redirect(levelUser($this->session->userdata('level')).'/sakit');
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(levelUser($this->session->userdata('level')).'sakit');
+            redirect(levelUser($this->session->userdata('level')).'/sakit');
         }
     }
+
+	public function update_status($id_users, $status) {
+
+		$data = [
+			'status' => $status,
+			'updated_at' => date('Y-m-d H:i:s'),
+		];
+
+		$this->Tbl_sakit_model->update($id_users, $data);
+
+		$this->session->set_flashdata('message', 'Update Record Success');
+		redirect(levelUser($this->session->userdata('level')).'/sakit');
+	}
 
     public function _rules() 
     {

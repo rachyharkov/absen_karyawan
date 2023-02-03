@@ -19,7 +19,7 @@ class Izin extends CI_Controller
         $data = array(
             'izin_data' => $izin,
         );
-        $this->template->load('template','izin/tbl_izin_list', $data);
+        $this->template->load('template','pengguna_berlevel/izin/tbl_izin_list', $data);
     }
 
     public function read($id) 
@@ -36,10 +36,10 @@ class Izin extends CI_Controller
 		'created_at' => $row->created_at,
 		'updated_at' => $row->updated_at,
 	    );
-            $this->template->load('template','izin/tbl_izin_read', $data);
+            $this->template->load('template','pengguna_berlevel/izin/tbl_izin_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(site_url(levelUser($this->session->userdata('level')).'izin'));
+            redirect(site_url(levelUser($this->session->userdata('level')).'/izin'));
         }
     }
 
@@ -56,7 +56,7 @@ class Izin extends CI_Controller
 	    'created_at' => set_value('created_at'),
 	    'updated_at' => set_value('updated_at'),
 	);
-        $this->template->load('template','izin/tbl_izin_form', $data);
+        $this->template->load('template','pengguna_berlevel/izin/tbl_izin_form', $data);
     }
     
     public function create_action() 
@@ -66,14 +66,23 @@ class Izin extends CI_Controller
         if ($this->form_validation->run() == FALSE) {
             $this->create();
         } else {
+			$user_id = $this->input->post('users_id',TRUE);
+			$tanggal = date('Y-m-d', strtotime($this->input->post('tanggal',TRUE)));
+			
+			$apakahAdaDataDitanggalSegitu = apakahDataIzinAda($tanggal, $user_id);
+			if ($apakahAdaDataDitanggalSegitu == 'ada') {
+				$this->session->set_flashdata('error', 'Tidak dapat menyimpan pada tanggal tersebut karena Data Izin/Absen Sudah Ada');
+				$this->create();
+				return;
+			}
+
             $data = array(
-		'users_id' => $this->input->post('users_id',TRUE),
-		'tanggal' => $this->input->post('tanggal',TRUE),
-		'alasan' => $this->input->post('alasan',TRUE),
-		'status' => $this->input->post('status',TRUE),
-		'created_at' => $this->input->post('created_at',TRUE),
-		'updated_at' => $this->input->post('updated_at',TRUE),
-	    );
+				'users_id' => $this->input->post('users_id',TRUE),
+				'tanggal' => date('Y-m-d', strtotime($tanggal)),
+				'alasan' => $this->input->post('alasan',TRUE),
+				'created_at' => date('Y-m-d H:i:s'),
+				'updated_at' => date('Y-m-d H:i:s'),
+			);
 
             $this->Tbl_izin_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success');
@@ -97,10 +106,10 @@ class Izin extends CI_Controller
 		'created_at' => set_value('created_at', $row->created_at),
 		'updated_at' => set_value('updated_at', $row->updated_at),
 	    );
-            $this->template->load('template','izin/tbl_izin_form', $data);
+            $this->template->load('template','pengguna_berlevel/izin/tbl_izin_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(levelUser($this->session->userdata('level')).'izin');
+            redirect(levelUser($this->session->userdata('level')).'/izin');
         }
     }
     
@@ -111,14 +120,23 @@ class Izin extends CI_Controller
         if ($this->form_validation->run() == FALSE) {
 			$this->update(encrypt_url($this->input->post('id', TRUE)));
         } else {
+			$user_id = $this->input->post('users_id',TRUE);
+			$tanggal = date('Y-m-d', strtotime($this->input->post('tanggal',TRUE)));
+			
+			$apakahAdaDataDitanggalSegitu = apakahDataIzinAda($tanggal, $user_id);
+			if ($apakahAdaDataDitanggalSegitu == 'ada') {
+				$this->session->set_flashdata('error', 'Tidak dapat menyimpan pada tanggal tersebut karena Data Izin/Absen Sudah Ada');
+				$this->create();
+				return;
+			}
+
             $data = array(
-		'users_id' => $this->input->post('users_id',TRUE),
-		'tanggal' => $this->input->post('tanggal',TRUE),
-		'alasan' => $this->input->post('alasan',TRUE),
-		'status' => $this->input->post('status',TRUE),
-		'created_at' => $this->input->post('created_at',TRUE),
-		'updated_at' => $this->input->post('updated_at',TRUE),
-	    );
+				'users_id' => $this->input->post('users_id',TRUE),
+				'tanggal' => date('Y-m-d', strtotime($tanggal)),
+				'alasan' => $this->input->post('alasan',TRUE),
+				'created_at' => date('Y-m-d H:i:s'),
+				'updated_at' => date('Y-m-d H:i:s'),
+			);
 
             $this->Tbl_izin_model->update($this->input->post('id', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
@@ -133,21 +151,31 @@ class Izin extends CI_Controller
         if ($row) {
             $this->Tbl_izin_model->delete(decrypt_url($id));
             $this->session->set_flashdata('message', 'Delete Record Success');
-            redirect(levelUser($this->session->userdata('level')).'izin');
+            redirect(levelUser($this->session->userdata('level')).'/izin');
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(levelUser($this->session->userdata('level')).'izin');
+            redirect(levelUser($this->session->userdata('level')).'/izin');
         }
     }
+
+	public function update_status($id_users, $status) {
+
+		$data = [
+			'status' => $status,
+			'updated_at' => date('Y-m-d H:i:s'),
+		];
+
+		$this->Tbl_izin_model->update($id_users, $data);
+
+		$this->session->set_flashdata('message', 'Update Record Success');
+		redirect(levelUser($this->session->userdata('level')).'/izin');
+	}
 
     public function _rules() 
     {
 	$this->form_validation->set_rules('users_id', 'users id', 'trim|required');
 	$this->form_validation->set_rules('tanggal', 'tanggal', 'trim|required');
 	$this->form_validation->set_rules('alasan', 'alasan', 'trim|required');
-	$this->form_validation->set_rules('status', 'status', 'trim|required');
-	$this->form_validation->set_rules('created_at', 'created at', 'trim|required');
-	$this->form_validation->set_rules('updated_at', 'updated at', 'trim|required');
 
 	$this->form_validation->set_rules('id', 'id', 'trim');
 	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');

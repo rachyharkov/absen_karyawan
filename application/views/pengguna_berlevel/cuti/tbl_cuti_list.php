@@ -65,7 +65,7 @@
 								'status' => 'reject',
 								'text' => 'Rejected'
 							],
-							'waiting' => [
+							null => [
 								'btn' => 'btn-warning',
 								'icon' => 'fa-clock',
 								'status' => 'waiting',
