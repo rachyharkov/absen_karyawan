@@ -34,8 +34,7 @@
                       <th>No</th>
                       <th>Users Id</th>
                       <th>Nama Lengkap</th>
-                      <th>Tanggal Mulai</th>
-                      <th>Tanggal Akhir</th>
+                      <th>Tanggal</th>
                       <th>Alasan</th>
                       <th>Status</th>
                       <th>Action</th>
@@ -49,58 +48,61 @@
                       <td><?= $no++?></td>
                       <td><?php echo $cuti->users_id ?></td>
                       <td><?php echo $cuti->nama_lengkap ?></td>
-                      <td><?php echo $cuti->tanggal_mulai ?></td>
-                      <td><?php echo $cuti->tanggal_akhir ?></td>
+                      <td><?php echo $cuti->tanggal ?></td>
                       <td><?php echo $cuti->alasan ?></td>
                       <td style="text-align: center;font-size: 1.2rem;">
-					  	<?php
+                        <?php
 						$arrbutton = array(
 							'approved' => [
 								'btn' => 'btn-success',
 								'icon' => 'fa-check-circle',
-								'status' => 'approve'
+								'status' => 'approve',
+								'text' => 'Approved'
 							],
 							'rejected' => [
 								'btn' => 'btn-danger',
 								'icon' => 'fa-times-circle',
-								'status' => 'reject'
+								'status' => 'reject',
+								'text' => 'Rejected'
 							],
 							'waiting' => [
 								'btn' => 'btn-warning',
 								'icon' => 'fa-clock',
-								'status' => 'waiting'
+								'status' => 'waiting',
+								'text' => 'Waiting'
 							]
 						);
 						?>
-					  	<div class="btn-group">
-							<?php
+                        <div class="btn-group">
+                          <?php
 								foreach($arrbutton as $key => $value) {
 									if($key == $cuti->status) {
-										echo '<button type="button" class="btn '.$value['btn'].' btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-											<i class="fas '.$value['icon'].'"></i> '.$value['status'].'
+										echo '<button type="button" class="btn '.$value['btn'].' btn-sm">
+											<i class="fas '.$value['icon'].'"></i> '.$value['text'].'
 										</button>';
 									}
 								}
 							?>
-						</div>
-						<?php
-						if($cuti->status == 'approved') {
-							echo '<i class="fas fa-check-circle text-success"></i><p style="display:none;">Approved</p>';
-						} else if($cuti->status == 'rejected') {
-							echo '<i class="fas fa-times-circle text-danger"></i><p style="display:none;">Rejected</p>';
-						} else {
-							echo '<i class="fas fa-clock text-warning"></i><p style="display:none;">Waiting</p>';
-						}
-						?>
-					  </td>
+                        </div>
+                      </td>
                       <td style="text-align:center" width="200px">
-                        <?php 
-				// echo anchor(site_url(levelUser($this->session->userdata('level')).'/cuti/read/'.encrypt_url($cuti->id)),'<i class="fas fa-eye" aria-hidden="true"></i>','class="btn btn-success btn-sm read_data"'); 
-				// echo '  '; 
-				// echo anchor(site_url(levelUser($this->session->userdata('level')).'/cuti/update/'.encrypt_url($cuti->id)),'<i class="fas fa-pencil-alt" aria-hidden="true"></i>','class="btn btn-primary btn-sm update_data"'); 
-				// echo '  '; 
-				echo anchor(site_url(levelUser($this->session->userdata('level')).'/cuti/delete/'.encrypt_url($cuti->id)),'<i class="fas fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm delete_data" Delete','onclick="javasciprt: return confirm(\'Are You Sure ?\')"'); 
-				?>
+                        <a href="<?= site_url(levelUser($this->session->userdata('level')).'/cuti/read/'.encrypt_url($cuti->id)) ?>"
+                          class="btn btn-info btn-sm"><i class="fas fa-eye" aria-hidden="true"></i></a>
+                        <?php
+						if($cuti->status == null) {
+							echo anchor(site_url(levelUser($this->session->userdata('level')).'/cuti/update/'.encrypt_url($cuti->id)),'<i class="fas fa-pencil-alt" aria-hidden="true"></i>','class="btn btn-primary btn-sm update_data"'); 
+							echo '  '; 
+							echo anchor(site_url(levelUser($this->session->userdata('level')).'/cuti/delete/'.encrypt_url($cuti->id)),'<i class="fas fa-trash-alt" aria-hidden="true"></i>','class="btn btn-danger btn-sm delete_data" Delete','onclick="javasciprt: return confirm(\'Are You Sure ?\')"'); 
+							?>
+                        <div class="btn-group">
+                          <button class="btn btn-success btn-sm btn-approve" data-id="<?= $cuti->id ?>"
+                            data-status="approved"><i class="fas fa-check-circle"></i></button>
+                          <button class="btn btn-danger btn-sm btn-reject" data-id="<?= $cuti->id ?>"
+                            data-status="rejected"><i class="fas fa-times-circle"></i></button>
+                        </div>
+                        <?php
+						}
+					?>
                       </td>
                     </tr>
                     <?php } ?>
@@ -114,3 +116,43 @@
       </div>
     </div>
   </div>
+</div>
+<script>
+$(document).ready(function() {
+  $('.btn-approve').click(function() {
+    var id = $(this).data('id');
+    var status = $(this).data('status');
+    Swal.fire({
+      title: 'Apakah anda yakin?',
+      text: "Anda akan mengubah status cuti menjadi " + status,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, ubah status!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = '<?= base_url('admin/cuti/update_status/') ?>' + id + '/' + status;
+      }
+    })
+  })
+
+  $('.btn-reject').click(function() {
+    var id = $(this).data('id');
+    var status = $(this).data('status');
+    Swal.fire({
+      title: 'Apakah anda yakin?',
+      text: "Anda akan mengubah status cuti menjadi " + status,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, ubah status!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = '<?= base_url('admin/cuti/update_status/') ?>' + id + '/' + status;
+      }
+    })
+  })
+})
+</script>

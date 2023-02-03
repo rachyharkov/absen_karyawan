@@ -1,5 +1,5 @@
 <div id="content" class="app-content">
-  <div class="col-md-6 ui-sortable">
+  <div class="col ui-sortable">
     <div class="panel panel-inverse" data-sortable-id="form-stuff-1" style="" data-init="true">
 
       <div class="panel-heading ui-sortable-handle">
@@ -19,27 +19,23 @@
 
         <form action="<?php echo $action; ?>" method="post">
           <thead>
-            <table id="data-table-default" class="table  table-bordered table-hover table-td-valign-middle">
+            <table id="data-table-default" class="table table-bordered table-hover table-td-valign-middle">
               <tr>
                 <td>Users Id <?php echo form_error('users_id') ?></td>
                 <td>
 									<select name="users_id" id="users_id" class="form-control">
 										<option value="">-- Ketik Username/Nama Karyawan --</option>
-										<?php foreach ($users_id as $key => $value) { ?>
-											<option value="<?php echo $value->id ?>" <?php echo $value->id == $users_id ? 'selected' : '' ?>><?php echo $value->nama ?></option>
-										<?php } ?>
 									</select>
 								</td>
               </tr>
               <tr>
-                <td>Tanggal Mulai <?php echo form_error('tanggal_mulai') ?></td>
-                <td><input type="date" class="form-control tanggal_input" name="tanggal_mulai" id="tanggal_mulai"
-                    placeholder="Tanggal Mulai" value="<?php echo $tanggal_mulai; ?>" /></td>
-              </tr>
-              <tr>
-                <td>Tanggal Akhir <?php echo form_error('tanggal_akhir') ?></td>
-                <td><input type="date" class="form-control tanggal_input" name="tanggal_akhir" id="tanggal_akhir"
-                    placeholder="Tanggal Akhir" value="<?php echo $tanggal_akhir; ?>" /></td>
+                <td>Tanggal <?php echo form_error('tanggal') ?></td>
+                <td>
+									<div class="input-group">
+										<input type="date" name="tanggal" id="tanggal" class="form-control" value="<?php echo $tanggal; ?>" />
+										<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+									</div>
+								</td>
               </tr>
 
               <tr>
@@ -65,11 +61,10 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.11.0/js/standalone/selectize.js"></script>
+
 <script>
 	$(document).ready(function() {
 
-		var today = new Date().toISOString().split('T')[0];
-		$('.tanggal_input').attr('min', today);
 		$('#users_id').selectize({
 			// fetch data from api
 			valueField: 'id',
@@ -95,5 +90,19 @@
 				});
 			}
 		});
+
+		<?php
+		if($button == 'Update') {
+			$getdatausers = $this->db->get_where('tbl_users', ['id' => $users_id])->row();
+			$idnya = $getdatausers->id;
+			$usernamenya = $getdatausers->username;
+			$namanya = $getdatausers->nama_lengkap;
+			?>
+				$('#users_id')[0].selectize.addOption({id: '<?php echo $idnya ?>', text: '<?php echo $namanya.' - '.$usernamenya ?>'});
+				
+				$('#users_id')[0].selectize.setValue('<?php echo $idnya ?>');
+			<?php
+		}
+		?>
 	})
 </script>

@@ -30,8 +30,7 @@ class Cuti extends CI_Controller
 				
 		'id' => $row->id,
 		'users_id' => $row->users_id,
-		'tanggal_mulai' => $row->tanggal_mulai,
-		'tanggal_akhir' => $row->tanggal_akhir,
+		'tanggal' => $row->tanggal,
 		'alasan' => $row->alasan,
 		'status' => $row->status,
 	    );
@@ -45,14 +44,13 @@ class Cuti extends CI_Controller
     public function create() 
     {
         $data = array(
-            'button' => 'Create',
-            'action' => 'create_action',
-	    'id' => set_value('id'),
-	    'users_id' => set_value('users_id'),
-	    'tanggal_mulai' => set_value('tanggal_mulai'),
-	    'tanggal_akhir' => set_value('tanggal_akhir'),
-	    'alasan' => set_value('alasan'),
-	);
+			'button' => 'Create',
+            'action' => site_url(levelUser($this->session->userdata('level')).'/cuti/create_action'),
+			'id' => set_value('id'),
+			'users_id' => set_value('users_id'),
+			'tanggal' => set_value('tanggal'),
+			'alasan' => set_value('alasan'),
+		);
         $this->template->load('template','pengguna_berlevel/cuti/tbl_cuti_form', $data);
     }
     
@@ -63,12 +61,23 @@ class Cuti extends CI_Controller
         if ($this->form_validation->run() == FALSE) {
             $this->create();
         } else {
+
+			$user_id = $this->input->post('users_id',TRUE);
+			$tanggal = date('Y-m-d', strtotime($this->input->post('tanggal',TRUE)));
+			
+			$apakahAdaDataDitanggalSegitu = apakahDataIzinAda($tanggal, $user_id, 'cuti');
+			if ($apakahAdaDataDitanggalSegitu == 'ada') {
+				$this->session->set_flashdata('error', 'Tidak dapat menyimpan pada tanggal tersebut karena Data Izin/Absen Sudah Ada');
+				$this->create();
+				return;
+			}
+
             $data = array(
 				'users_id' => $this->input->post('users_id',TRUE),
-				'tanggal_mulai' => $this->input->post('tanggal_mulai',TRUE),
-				'tanggal_akhir' => $this->input->post('tanggal_akhir',TRUE),
+				'tanggal' => date('Y-m-d', strtotime($tanggal)),
 				'alasan' => $this->input->post('alasan',TRUE),
-				'status' => null,
+				'created_at' => date('Y-m-d H:i:s'),
+				'updated_at' => date('Y-m-d H:i:s'),
 			);
 
             $this->Tbl_cuti_model->insert($data);
@@ -84,17 +93,16 @@ class Cuti extends CI_Controller
         if ($row) {
             $data = array(
                 'button' => 'Update',
-                'action' => levelUser($this->session->userdata('level')).'/cuti/update_action',
+                'action' => site_url(levelUser($this->session->userdata('level')).'/cuti/update_action'),
 				'id' => set_value('id', $row->id),
 				'users_id' => set_value('users_id', $row->users_id),
-				'tanggal_mulai' => set_value('tanggal_mulai', $row->tanggal_mulai),
-				'tanggal_akhir' => set_value('tanggal_akhir', $row->tanggal_akhir),
+				'tanggal' => set_value('tanggal', $row->tanggal),
 				'alasan' => set_value('alasan', $row->alasan),
 	    );
             $this->template->load('template','pengguna_berlevel/cuti/tbl_cuti_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(levelUser($this->session->userdata('level')).'cuti');
+            redirect(levelUser($this->session->userdata('level')).'/cuti');
         }
     }
     
@@ -105,11 +113,22 @@ class Cuti extends CI_Controller
         if ($this->form_validation->run() == FALSE) {
 			$this->update(encrypt_url($this->input->post('id', TRUE)));
         } else {
+
+			$user_id = $this->input->post('users_id',TRUE);
+			$tanggal = date('Y-m-d', strtotime($this->input->post('tanggal',TRUE)));
+			
+			$apakahAdaDataDitanggalSegitu = apakahDataIzinAda($tanggal, $user_id, 'cuti');
+			if ($apakahAdaDataDitanggalSegitu == 'ada') {
+				$this->session->set_flashdata('error', 'Tidak dapat menyimpan pada tanggal tersebut karena Data Izin/Absen Sudah Ada');
+				$this->update(encrypt_url($this->input->post('id', TRUE)));
+				return;
+			}
+
             $data = array(
 				'users_id' => $this->input->post('users_id',TRUE),
-				'tanggal_mulai' => $this->input->post('tanggal_mulai',TRUE),
-				'tanggal_akhir' => $this->input->post('tanggal_akhir',TRUE),
+				'tanggal' => date('Y-m-d', strtotime($tanggal)),
 				'alasan' => $this->input->post('alasan',TRUE),
+				'updated_at' => date('Y-m-d H:i:s'),
 	    	);
 
             $this->Tbl_cuti_model->update($this->input->post('id', TRUE), $data);
@@ -125,10 +144,10 @@ class Cuti extends CI_Controller
         if ($row) {
             $this->Tbl_cuti_model->delete(decrypt_url($id));
             $this->session->set_flashdata('message', 'Delete Record Success');
-            redirect(levelUser($this->session->userdata('level')).'cuti');
+            redirect(levelUser($this->session->userdata('level')).'/cuti');
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(levelUser($this->session->userdata('level')).'cuti');
+            redirect(levelUser($this->session->userdata('level')).'/cuti');
         }
     }
 
@@ -153,16 +172,27 @@ class Cuti extends CI_Controller
 		echo json_encode($output);
 	}
 
+	public function update_status($id_users, $status) {
+
+		$data = [
+			'status' => $status,
+			'updated_at' => date('Y-m-d H:i:s'),
+		];
+
+		$this->Tbl_cuti_model->update($id_users, $data);
+
+		$this->session->set_flashdata('message', 'Update Record Success');
+		redirect(levelUser($this->session->userdata('level')).'/cuti');
+	}
+
     public function _rules() 
     {
-	$this->form_validation->set_rules('users_id', 'users id', 'trim|required');
-	$this->form_validation->set_rules('tanggal_mulai', 'tanggal mulai', 'trim|required');
-	$this->form_validation->set_rules('tanggal_akhir', 'tanggal akhir', 'trim|required');
-	$this->form_validation->set_rules('alasan', 'alasan', 'trim|required');
-	$this->form_validation->set_rules('status', 'status', 'trim|required');
+		$this->form_validation->set_rules('users_id', 'users id', 'trim|required');
+		$this->form_validation->set_rules('tanggal', 'tanggal', 'trim|required');
+		$this->form_validation->set_rules('alasan', 'alasan', 'trim|required');
 
-	$this->form_validation->set_rules('id', 'id', 'trim');
-	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+		$this->form_validation->set_rules('id', 'id', 'trim');
+		$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 
 }
