@@ -34,6 +34,7 @@
                       <th>No</th>
                       <th>Nama</th>
                       <th>Tanggal</th>
+					  <th>Data Masuk</th>
                       <th>Status</th>
                       <th>Action</th>
                     </tr>
@@ -46,6 +47,7 @@
                       <td><?= $no++?></td>
                       <td><?php echo $izin->nama_lengkap ?></td>
                       <td><?php echo $izin->tanggal ?></td>
+					  <td><?= $izin->created_at ?></td>
                       <td>
 					  <?php
 						$arrbutton = array(

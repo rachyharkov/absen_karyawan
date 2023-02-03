@@ -19,7 +19,7 @@ class Sakit extends CI_Controller
         $data = array(
             'sakit_data' => $sakit,
         );
-        $this->template->load('template','sakit/tbl_sakit_list', $data);
+        $this->template->load('template','pengguna_berlevel/sakit/tbl_sakit_list', $data);
     }
 
     public function read($id) 
@@ -36,7 +36,7 @@ class Sakit extends CI_Controller
 		'created_at' => $row->created_at,
 		'updated_at' => $row->updated_at,
 	    );
-            $this->template->load('template','sakit/tbl_sakit_read', $data);
+            $this->template->load('template','pengguna_berlevel/sakit/tbl_sakit_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url(levelUser($this->session->userdata('level')).'/sakit'));
@@ -56,7 +56,7 @@ class Sakit extends CI_Controller
 	    'created_at' => set_value('created_at'),
 	    'updated_at' => set_value('updated_at'),
 	);
-        $this->template->load('template','sakit/tbl_sakit_form', $data);
+        $this->template->load('template','pengguna_berlevel/sakit/tbl_sakit_form', $data);
     }
     
     public function create_action() 
@@ -106,7 +106,7 @@ class Sakit extends CI_Controller
 		'created_at' => set_value('created_at', $row->created_at),
 		'updated_at' => set_value('updated_at', $row->updated_at),
 	    );
-            $this->template->load('template','sakit/tbl_sakit_form', $data);
+            $this->template->load('template','pengguna_berlevel/sakit/tbl_sakit_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(levelUser($this->session->userdata('level')).'/sakit');
@@ -176,9 +176,6 @@ class Sakit extends CI_Controller
 	$this->form_validation->set_rules('users_id', 'users id', 'trim|required');
 	$this->form_validation->set_rules('tanggal', 'tanggal', 'trim|required');
 	$this->form_validation->set_rules('alasan', 'alasan', 'trim|required');
-	$this->form_validation->set_rules('status', 'status', 'trim|required');
-	$this->form_validation->set_rules('created_at', 'created at', 'trim|required');
-	$this->form_validation->set_rules('updated_at', 'updated at', 'trim|required');
 
 	$this->form_validation->set_rules('id', 'id', 'trim');
 	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');

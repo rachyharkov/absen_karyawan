@@ -34,6 +34,7 @@
                       <th>No</th>
                       <th>Nama Lengkap</th>
                       <th>Tanggal</th>
+					  <th>Data Masuk</th>
                       <th>Status</th>
                       <th>Action</th>
                     </tr>
@@ -46,6 +47,7 @@
                       <td><?= $no++?></td>
                       <td><?php echo $sakit->nama_lengkap ?></td>
                       <td><?php echo $sakit->tanggal ?></td>
+					  <td><?php echo $sakit->created_at ?></td>
                       <td>
 					  <?php
 						$arrbutton = array(
@@ -72,7 +74,7 @@
                         <div class="btn-group">
                           <?php
 								foreach($arrbutton as $key => $value) {
-									if($key == $izin->status) {
+									if($key == $sakit->status) {
 										echo '<button type="button" class="btn '.$value['btn'].' btn-sm">
 											<i class="fas '.$value['icon'].'"></i> '.$value['text'].'
 										</button>';

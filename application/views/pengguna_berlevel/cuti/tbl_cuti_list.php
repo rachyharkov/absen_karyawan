@@ -35,7 +35,7 @@
                       <th>Users Id</th>
                       <th>Nama Lengkap</th>
                       <th>Tanggal</th>
-                      <th>Alasan</th>
+											<th>Data Masuk</th>
                       <th>Status</th>
                       <th>Action</th>
                     </tr>
@@ -49,7 +49,7 @@
                       <td><?php echo $cuti->users_id ?></td>
                       <td><?php echo $cuti->nama_lengkap ?></td>
                       <td><?php echo $cuti->tanggal ?></td>
-                      <td><?php echo $cuti->alasan ?></td>
+											<td><?php echo $cuti->created_at ?></td>
                       <td style="text-align: center;font-size: 1.2rem;">
                         <?php
 						$arrbutton = array(
