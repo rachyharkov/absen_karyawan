@@ -21,17 +21,31 @@
             <td><?php echo $users_id; ?></td>
           </tr>
           <tr>
-            <td>Tanggal Mulai</td>
-            <td><?php echo $tanggal_mulai; ?></td>
-          </tr>
-          <tr>
-            <td>Tanggal Akhir</td>
-            <td><?php echo $tanggal_akhir; ?></td>
+            <td>Tanggal</td>
+            <td><?php echo $tanggal; ?></td>
           </tr>
           <tr>
             <td>Alasan</td>
             <td><?php echo $alasan; ?></td>
           </tr>
+					<tr>
+						<td>Lampiran</td>
+						<td>
+							<?php if ($lampiran != null) { ?>
+							<a href="<?php echo base_url('assets/upload/cuti/'.$lampiran) ?>" target="_blank">Lihat Lampiran</a>
+							<?php } else { ?>
+							-
+							<?php } ?>
+						</td>
+					</tr>
+					<tr>
+						<td>Updated At</td>
+						<td><?php echo $updated_at; ?></td>
+					</tr>
+					<tr>
+						<td>Created At</td>
+						<td><?php echo $created_at; ?></td>
+					</tr>
           <tr>
             <td>Status</td>
             <td><?php echo $status; ?></td>

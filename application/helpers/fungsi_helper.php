@@ -36,7 +36,7 @@ function cek_asal_lapangan($user_id) {
 	return $lapangan->id_lapangan;
 }
 
-function apakahDataIzinAda($tanggal, $user_id) {
+function apakahDataIzinAda($tanggal, $user_id, $jenisdata = null) {
 	$ci = &get_instance();
 	$cek = null;
 
@@ -51,13 +51,31 @@ function apakahDataIzinAda($tanggal, $user_id) {
 	// print_r($cek->num_rows());
 
 	if($cek1->num_rows() > 0) {
-		return 'ada';
+		if($cek1->row()->tanggal != $tanggal) {
+			return 'ada';
+		}
+
+		if($jenisdata == 'new') {
+			return 'ada';
+		}
 	}
 	if($cek2->num_rows() > 0) {
-		return 'ada';
+		if($cek2->row()->tanggal != $tanggal) {
+			return 'ada';
+		}
+
+		if($jenisdata == 'new') {
+			return 'ada';
+		}
 	}
 	if($cek3->num_rows() > 0) {
-		return 'ada';
+		if($cek3->row()->tanggal != $tanggal) {
+			return 'ada';
+		}
+
+		if($jenisdata == 'new') {
+			return 'ada';
+		}
 	}
 
 	return 'ga_ada';

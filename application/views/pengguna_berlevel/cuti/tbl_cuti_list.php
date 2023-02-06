@@ -34,6 +34,7 @@
                       <th>No</th>
                       <th>Users Id</th>
                       <th>Nama Lengkap</th>
+											<th>Lampiran</th>
                       <th>Tanggal</th>
 											<th>Data Masuk</th>
                       <th>Status</th>
@@ -48,6 +49,7 @@
                       <td><?= $no++?></td>
                       <td><?php echo $cuti->users_id ?></td>
                       <td><?php echo $cuti->nama_lengkap ?></td>
+											<td><?= $cuti->lampiran ? '<a href="'.base_url('assets/assets/img/user/cuti/'.$cuti->lampiran).'" target="_blank" class="btn btn-info btn-sm"><i class="fas fa-envelope-open-text" aria-hidden="true"></i></a>' : ''; ?></td>
                       <td><?php echo $cuti->tanggal ?></td>
 											<td><?php echo $cuti->created_at ?></td>
                       <td style="text-align: center;font-size: 1.2rem;">

@@ -17,7 +17,7 @@
       </div>
       <div class="panel-body">
 
-        <form action="<?php echo $action; ?>" method="post">
+        <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">
           <thead>
             <table id="data-table-default" class="table table-bordered table-hover table-td-valign-middle">
               <tr>
@@ -43,6 +43,21 @@
                 <td> <textarea class="form-control" rows="3" name="alasan" id="alasan"
                     placeholder="Alasan"><?php echo $alasan; ?></textarea></td>
               </tr>
+							<tr>
+								<td>Lampiran</td>
+								<td>
+									<input type="file" class="form-control" name="lampiran" id="lampiran" placeholder="Lampiran" />
+									<?php
+										if($button == 'Update' && $lampiran != NULL) {
+											?>
+												<br>
+												<a href="<?php echo base_url('assets/assets/img/user/cuti/'.$lampiran) ?>" target="_blank">Lihat Lampiran</a>
+												<input type="hidden" name="lampiran_old" value="<?php echo $lampiran; ?>" />
+											<?php
+										}
+									?>
+								</td>
+							</tr>
               <tr>
                 <td></td>
                 <td><input type="hidden" name="id" value="<?php echo $id; ?>" />
