@@ -27,14 +27,16 @@
                 </div>
               </div>
               <div class="box-body" style="overflow-x: scroll; ">
-                <table id="data-table-default"
+							<table id="data-table-default"
                   class="table table-bordered table-hover table-td-valign-middle text-white">
                   <thead>
                     <tr>
                       <th>No</th>
-                      <th>Nama</th>
+                      <th>Users Id</th>
+                      <th>Nama Lengkap</th>
+											<th>Lampiran</th>
                       <th>Tanggal</th>
-					  <th>Data Masuk</th>
+											<th>Data Masuk</th>
                       <th>Status</th>
                       <th>Action</th>
                     </tr>
@@ -45,11 +47,13 @@
                 ?>
                     <tr>
                       <td><?= $no++?></td>
+                      <td><?php echo $izin->users_id ?></td>
                       <td><?php echo $izin->nama_lengkap ?></td>
+											<td><?= $izin->lampiran ? '<a href="'.base_url('assets/assets/img/user/izin/'.$izin->lampiran).'" target="_blank" class="btn btn-info btn-sm"><i class="fas fa-envelope-open-text" aria-hidden="true"></i></a>' : ''; ?></td>
                       <td><?php echo $izin->tanggal ?></td>
-					  <td><?= $izin->created_at ?></td>
-                      <td>
-					  <?php
+											<td><?php echo $izin->created_at ?></td>
+                      <td style="text-align: center;font-size: 1.2rem;">
+                        <?php
 						$arrbutton = array(
 							'approved' => [
 								'btn' => 'btn-success',
@@ -82,9 +86,9 @@
 								}
 							?>
                         </div>
-					  </td>
+                      </td>
                       <td style="text-align:center" width="200px">
-					  <a href="<?= site_url(levelUser($this->session->userdata('level')).'/izin/read/'.encrypt_url($izin->id)) ?>"
+                        <a href="<?= site_url(levelUser($this->session->userdata('level')).'/izin/read/'.encrypt_url($izin->id)) ?>"
                           class="btn btn-info btn-sm"><i class="fas fa-eye" aria-hidden="true"></i></a>
                         <?php
 						if($izin->status == null) {

@@ -34,6 +34,8 @@ class Cuti extends CI_Controller
 		'alasan' => $row->alasan,
 		'lampiran' => $row->lampiran,
 		'status' => $row->status,
+		'created_at' => $row->created_at,
+		'updated_at' => $row->updated_at,
 	    );
             $this->template->load('template','pengguna_berlevel/cuti/tbl_cuti_read', $data);
         } else {
@@ -156,7 +158,7 @@ class Cuti extends CI_Controller
 				'updated_at' => date('Y-m-d H:i:s'),
 	    	);
 
-			$filelampiran = $_FILES['lampiran'] ?? FALSE;
+			$filelampiran = $_FILES['lampiran'] == null ? FALSE : TRUE;
 			if ($filelampiran) {
 
 				$apakahadafilelama = $this->input->post('lampiran_old',TRUE) ?? FALSE;
@@ -168,13 +170,7 @@ class Cuti extends CI_Controller
 				$config['max_size']         = 10048;
 				$config['file_name']        = 'bukti-' . date('ymd') . '-' . substr(sha1(rand()), 0, 10);
 				$this->load->library('upload', $config);
-				if ( ! $this->upload->do_upload('lampiran'))
-				{
-					$this->session->set_flashdata('error', $this->upload->display_errors());
-					$this->update(encrypt_url($this->input->post('id', TRUE)));
-					return;
-				}
-				else
+				if ($this->upload->do_upload('lampiran'))
 				{
 					$upload_data = $this->upload->data();
 					$data['lampiran'] = $upload_data['file_name'];
@@ -192,7 +188,9 @@ class Cuti extends CI_Controller
         $row = $this->Tbl_cuti_model->get_by_id(decrypt_url($id));
 
         if ($row) {
-			unlink('./assets/assets/img/user/cuti/'.$row->lampiran);
+			if($row->lampiran) {
+				unlink('./assets/assets/img/user/cuti/'.$row->lampiran);
+			}
             $this->Tbl_cuti_model->delete(decrypt_url($id));
             $this->session->set_flashdata('message', 'Delete Record Success');
             redirect(levelUser($this->session->userdata('level')).'/cuti');

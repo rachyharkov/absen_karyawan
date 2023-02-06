@@ -32,7 +32,7 @@
 						<td>Lampiran</td>
 						<td>
 							<?php if ($lampiran != null) { ?>
-							<a href="<?php echo base_url('assets/upload/cuti/'.$lampiran) ?>" target="_blank">Lihat Lampiran</a>
+							<a href="<?php echo base_url('assets/assets/img/user/cuti/'.$lampiran) ?>" target="_blank">Lihat Lampiran</a>
 							<?php } else { ?>
 							-
 							<?php } ?>
