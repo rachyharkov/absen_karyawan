@@ -107,7 +107,7 @@
 		});
 
 		<?php
-		if($button == 'Update') {
+		if($button == 'Update' || $users_id != NULL) {
 			$getdatausers = $this->db->get_where('tbl_users', ['id' => $users_id])->row();
 			$idnya = $getdatausers->id;
 			$usernamenya = $getdatausers->username;

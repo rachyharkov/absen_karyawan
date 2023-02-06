@@ -32,6 +32,7 @@ class Sakit extends CI_Controller
 		'users_id' => $row->users_id,
 		'tanggal' => $row->tanggal,
 		'alasan' => $row->alasan,
+		'lampiran' => $row->lampiran,
 		'status' => $row->status,
 		'created_at' => $row->created_at,
 		'updated_at' => $row->updated_at,
@@ -39,7 +40,7 @@ class Sakit extends CI_Controller
             $this->template->load('template','pengguna_berlevel/sakit/tbl_sakit_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(site_url(levelUser($this->session->userdata('level')).'/sakit'));
+            redirect(site_url(levelUser($this->session->userdata('level')).'sakit'));
         }
     }
 
@@ -48,14 +49,11 @@ class Sakit extends CI_Controller
         $data = array(
             'button' => 'Create',
             'action' => site_url(levelUser($this->session->userdata('level')).'/sakit/create_action'),
-	    'id' => set_value('id'),
-	    'users_id' => set_value('users_id'),
-	    'tanggal' => set_value('tanggal'),
-	    'alasan' => set_value('alasan'),
-	    'status' => set_value('status'),
-	    'created_at' => set_value('created_at'),
-	    'updated_at' => set_value('updated_at'),
-	);
+			'id' => set_value('id'),
+			'users_id' => set_value('users_id'),
+			'tanggal' => set_value('tanggal'),
+			'alasan' => set_value('alasan'),
+		);
         $this->template->load('template','pengguna_berlevel/sakit/tbl_sakit_form', $data);
     }
     
@@ -69,20 +67,40 @@ class Sakit extends CI_Controller
 			$user_id = $this->input->post('users_id',TRUE);
 			$tanggal = date('Y-m-d', strtotime($this->input->post('tanggal',TRUE)));
 			
-			$apakahAdaDataDitanggalSegitu = apakahDataIzinAda($tanggal, $user_id);
+			$apakahAdaDataDitanggalSegitu = apakahDataIzinAda($tanggal, $user_id, 'new');
 			if ($apakahAdaDataDitanggalSegitu == 'ada') {
 				$this->session->set_flashdata('error', 'Tidak dapat menyimpan pada tanggal tersebut karena Data Izin/Absen Sudah Ada');
 				$this->create();
 				return;
 			}
 
-            $data = array(
+			$data = array(
 				'users_id' => $this->input->post('users_id',TRUE),
 				'tanggal' => date('Y-m-d', strtotime($tanggal)),
 				'alasan' => $this->input->post('alasan',TRUE),
 				'created_at' => date('Y-m-d H:i:s'),
 				'updated_at' => date('Y-m-d H:i:s'),
 			);
+
+			$filelampiran = isset($_FILES['lampiran']) ? $_FILES['lampiran'] : FALSE;
+			if ($filelampiran) {
+				$config['upload_path']      = './assets/assets/img/user/sakit';
+				$config['allowed_types']    = 'jpg|png|jpeg';
+				$config['max_size']         = 10048;
+				$config['file_name']        = 'bukti-' . date('ymd') . '-' . substr(sha1(rand()), 0, 10);
+				$this->load->library('upload', $config);
+				if ( ! $this->upload->do_upload('lampiran'))
+				{
+					$this->session->set_flashdata('error', $this->upload->display_errors());
+					$this->create();
+					return;
+				}
+				else
+				{
+					$upload_data = $this->upload->data();
+					$data['lampiran'] = $upload_data['file_name'];
+				}
+			}
 
             $this->Tbl_sakit_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success');
@@ -98,14 +116,13 @@ class Sakit extends CI_Controller
             $data = array(
                 'button' => 'Update',
                 'action' => site_url(levelUser($this->session->userdata('level')).'/sakit/update_action'),
-		'id' => set_value('id', $row->id),
-		'users_id' => set_value('users_id', $row->users_id),
-		'tanggal' => set_value('tanggal', $row->tanggal),
-		'alasan' => set_value('alasan', $row->alasan),
-		'status' => set_value('status', $row->status),
-		'created_at' => set_value('created_at', $row->created_at),
-		'updated_at' => set_value('updated_at', $row->updated_at),
-	    );
+				'id' => set_value('id', $row->id),
+				'users_id' => set_value('users_id', $row->users_id),
+				'tanggal' => set_value('tanggal', $row->tanggal),
+				'alasan' => set_value('alasan', $row->alasan),
+				'lampiran' => set_value('lampiran', $row->lampiran),
+				'lampiran_old' => set_value('lampiran', $row->lampiran),
+	    	);
             $this->template->load('template','pengguna_berlevel/sakit/tbl_sakit_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
@@ -126,7 +143,7 @@ class Sakit extends CI_Controller
 			$apakahAdaDataDitanggalSegitu = apakahDataIzinAda($tanggal, $user_id);
 			if ($apakahAdaDataDitanggalSegitu == 'ada') {
 				$this->session->set_flashdata('error', 'Tidak dapat menyimpan pada tanggal tersebut karena Data Izin/Absen Sudah Ada');
-				$this->create();
+				$this->update(encrypt_url($this->input->post('id', TRUE)));
 				return;
 			}
 
@@ -134,9 +151,27 @@ class Sakit extends CI_Controller
 				'users_id' => $this->input->post('users_id',TRUE),
 				'tanggal' => date('Y-m-d', strtotime($tanggal)),
 				'alasan' => $this->input->post('alasan',TRUE),
-				'created_at' => date('Y-m-d H:i:s'),
 				'updated_at' => date('Y-m-d H:i:s'),
-			);
+	    	);
+
+			$filelampiran = $_FILES['lampiran'] == null ? FALSE : TRUE;
+			if ($filelampiran) {
+
+				$apakahadafilelama = $this->input->post('lampiran_old',TRUE) ?? FALSE;
+				if ($apakahadafilelama) {
+					unlink('./assets/assets/img/user/sakit/'.$this->input->post('lampiran_old',TRUE));
+				}
+				$config['upload_path']      = './assets/assets/img/user/sakit';
+				$config['allowed_types']    = 'jpg|png|jpeg';
+				$config['max_size']         = 10048;
+				$config['file_name']        = 'bukti-' . date('ymd') . '-' . substr(sha1(rand()), 0, 10);
+				$this->load->library('upload', $config);
+				if ($this->upload->do_upload('lampiran'))
+				{
+					$upload_data = $this->upload->data();
+					$data['lampiran'] = $upload_data['file_name'];
+				}
+			}
 
             $this->Tbl_sakit_model->update($this->input->post('id', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
@@ -149,6 +184,9 @@ class Sakit extends CI_Controller
         $row = $this->Tbl_sakit_model->get_by_id(decrypt_url($id));
 
         if ($row) {
+			if($row->lampiran) {
+				unlink('./assets/assets/img/user/sakit/'.$row->lampiran);
+			}
             $this->Tbl_sakit_model->delete(decrypt_url($id));
             $this->session->set_flashdata('message', 'Delete Record Success');
             redirect(levelUser($this->session->userdata('level')).'/sakit');
@@ -157,6 +195,27 @@ class Sakit extends CI_Controller
             redirect(levelUser($this->session->userdata('level')).'/sakit');
         }
     }
+
+	public function get_user_by_name_or_username() {
+		$keyword = $this->input->get('q');
+		$data = $this->Tbl_cuti_model->get_user_by_name_or_username($keyword);
+
+		$output = [
+			'data' => [],
+			'more' => false,
+		];
+
+		if (count($data) > 0) {
+			foreach ($data as $key => $value) {
+				$output['data'][] = [
+					'id' => $value->id,
+					'text' => $value->nama_lengkap . ' - ' . $value->username,
+				];
+			}
+		}
+
+		echo json_encode($output);
+	}
 
 	public function update_status($id_users, $status) {
 
