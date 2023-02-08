@@ -36,6 +36,34 @@ function cek_asal_lapangan($user_id) {
 	return $lapangan->id_lapangan;
 }
 
+function count_users_active($lapangan_id = null) {
+	$ci = &get_instance();
+	$query = '';
+	if ($lapangan_id == null) {
+		$query = 'SELECT COUNT(*) as jumlah FROM tbl_users WHERE status = 1';
+	} else {
+		$query = 'SELECT COUNT(*) as jumlah FROM tbl_users JOIN tbl_penempatan_karyawan ON tbl_users.id = tbl_penempatan_karyawan.id_users
+		WHERE tbl_users.status = 1 AND id_lapangan = '.$lapangan_id;
+	}
+
+	$data = $ci->db->query($query)->row_array();
+	return $data;
+}
+
+function count_total_absensi_users($lapangan_id = null) {
+	$ci = &get_instance();
+	$query = '';
+	if ($lapangan_id == null) {
+		$query = 'SELECT COUNT(*) as jumlah FROM tbl_absensi';
+	} else {
+		$query = 'SELECT COUNT(*) as jumlah FROM tbl_absensi JOIN tbl_users ON tbl_absensi.users_id = tbl_users.id JOIN tbl_penempatan_karyawan ON tbl_users.id = tbl_penempatan_karyawan.id_users
+		WHERE tbl_users.status = 1 AND id_lapangan = '.$lapangan_id;
+	}
+
+	$data = $ci->db->query($query)->row_array();
+	return $data;
+}
+
 function apakahDataIzinAda($tanggal, $user_id, $jenisdata = null) {
 	$ci = &get_instance();
 	$cek = null;

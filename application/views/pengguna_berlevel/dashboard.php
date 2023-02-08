@@ -20,7 +20,7 @@
         <div class="stats-icon stats-icon-lg"><i class="fa fa-users"></i></div>
         <div class="stats-content">
           <div class="stats-title">Karyawan Aktif</div>
-          <div class="stats-number"> 10 Orang</div>
+          <div class="stats-number"> <?= count_users_active()['jumlah']; ?> Orang</div>
           <div class="stats-progress progress">
             <div class="progress-bar" style="width: 100%;"></div>
           </div>
@@ -30,7 +30,7 @@
 				<div class="stats-icon stats-icon-lg"><i class="fa fa-spinner"></i></div>
 				<div class="stats-content">
 					<div class="stats-title">Data Absensi</div>
-					<div class="stats-number"> 12,213</div>
+					<div class="stats-number"><?= count_total_absensi_users()['jumlah'] ?></div>
 					<div class="stats-progress progress">
 						<div class="progress-bar" style="width: 100%;"></div>
 					</div>
@@ -71,11 +71,10 @@
 
 			let list_of_location_html = ''
 			for (let i = 0; i < list_of_location.length; i++) {
-
 				list_of_location_html += `<li class="list-group-item" data-lat="${list_of_location[i].latitude}" data-lng="${list_of_location[i].longitude}">${list_of_location[i].nama_lapangan}</li>`
 				let marker = L.marker([list_of_location[i].latitude, list_of_location[i].longitude]).addTo(getLocationMap);
 				marker.bindPopup(`<b>${list_of_location[i].nama_lapangan}</b><br>Jumlah Karyawan: ${list_of_location[i].jumlah}<br>
-				<a href="<?php echo base_url('admin/lapangan/update/') ?>${list_of_location[i].lapangan_id}" class="btn btn-primary" style="color: white; margin-top: 1rem;">Detail</a>
+				<a href="<?= base_url('admin/lapangan/update/') ?>${list_of_location[i].lapangan_id}" class="btn btn-primary" style="color: white; margin-top: 1rem;">Detail</a>
 				`);
 
 			}

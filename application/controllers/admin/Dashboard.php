@@ -25,9 +25,12 @@ class Dashboard extends CI_Controller
 			(SELECT COUNT(*) FROM tbl_penempatan_karyawan WHERE id_lapangan = tbl_lapangan.id) AS jumlah
 			FROM tbl_lapangan';
 
+
 		$data = $this->db->query($query)->result_array();
-
-
+		// change id to encrypt_url($id)
+		for ($i=0; $i < count($data); $i++) { 
+			$data[$i]['lapangan_id'] = encrypt_url($data[$i]['lapangan_id']);
+		}
 		echo json_encode($data);
 	}
 }
