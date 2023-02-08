@@ -51,7 +51,7 @@ class Absensi extends CI_Controller
     {
         $data = array(
             'button' => 'Create',
-            'action' => 'create_action',
+            'action' => site_url(levelUser($this->session->userdata('level')).'/absensi/create_action'),
 			'id' => set_value('id'),
 			'users_id' => set_value('users_id'),
 			'tanggal' => set_value('tanggal'),
@@ -105,10 +105,8 @@ class Absensi extends CI_Controller
 			}
 
             $this->Tbl_absensi_model->insert($data);
-
-			print_r($data);
-            // $this->session->set_flashdata('message', 'Create Record Success');
-            // redirect(levelUser($this->session->userdata('level')).'/absensi');
+            $this->session->set_flashdata('message', 'Create Record Success');
+            redirect(levelUser($this->session->userdata('level')).'/absensi');
         }
     }
     
@@ -116,25 +114,39 @@ class Absensi extends CI_Controller
     {
         $row = $this->Tbl_absensi_model->get_by_id(decrypt_url($id));
 
+		$statusnya = $row->status;
+
+		if ($statusnya == 1) {
+			$statusnya = 'masuk';
+		} elseif ($statusnya == 2) {
+			$statusnya = 'pulang';
+		} else {
+			$statusnya = 'N/A';
+		}
+
+		$getlapanganid = $this->db->get_where('tbl_penempatan_karyawan', ['id_users' => $row->users_id])->row();
+		$lapanganid = $getlapanganid->id_lapangan;
         if ($row) {
             $data = array(
                 'button' => 'Update',
-                'action' => 'update_action',
-		'id' => set_value('id', $row->id),
-		'users_id' => set_value('users_id', $row->users_id),
-		'tanggal' => set_value('tanggal', $row->tanggal),
-		'jam' => set_value('jam', $row->jam),
-		'latitude' => set_value('latitude', $row->latitude),
-		'longitude' => set_value('longitude', $row->longitude),
-		'foto' => set_value('foto', $row->foto),
-		'ip_address' => set_value('ip_address', $row->ip_address),
-		'telat' => set_value('telat', $row->telat),
-		'status' => set_value('status', $row->status),
-	    );
+                'action' => site_url(levelUser($this->session->userdata('level')).'/absensi/update_action'),
+				'id' => set_value('id', $row->id),
+				'users_id' => set_value('users_id', $row->users_id),
+				'tanggal' => set_value('tanggal', $row->tanggal),
+				'jenis_absen' => set_value('jenis_absen', $statusnya),
+				'lapangan_id' => set_value('lapangan_id', $lapanganid),
+				'jam' => set_value('jam', $row->jam),
+				'latitude' => set_value('latitude', $row->latitude),
+				'longitude' => set_value('longitude', $row->longitude),
+				'foto' => set_value('foto', $row->foto),
+				'ip_address' => set_value('ip_address', $row->ip_address),
+				'telat' => set_value('telat', $row->telat),
+				'status' => set_value('status', $row->status),
+	    	);
             $this->template->load('template','pengguna_berlevel/absensi/tbl_absensi_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(levelUser($this->session->userdata('level')).'absensi');
+            redirect(levelUser($this->session->userdata('level')).'/absensi');
         }
     }
     
@@ -145,17 +157,43 @@ class Absensi extends CI_Controller
         if ($this->form_validation->run() == FALSE) {
 			$this->update(encrypt_url($this->input->post('id', TRUE)));
         } else {
-            $data = array(
-		'users_id' => $this->input->post('users_id',TRUE),
-		'tanggal' => $this->input->post('tanggal',TRUE),
-		'jam' => $this->input->post('jam',TRUE),
-		'latitude' => $this->input->post('latitude',TRUE),
-		'longitude' => $this->input->post('longitude',TRUE),
-		'foto' => $this->input->post('foto',TRUE),
-		'ip_address' => $this->input->post('ip_address',TRUE),
-		'telat' => $this->input->post('telat',TRUE),
-		'status' => $this->input->post('status',TRUE),
-	    );
+			$data = array(
+				'users_id' => $this->input->post('users_id',TRUE),
+				'tanggal' => $this->input->post('tanggal',TRUE),
+				'jam' => $this->input->post('jam',TRUE),
+				'latitude' => $this->input->post('latitude',TRUE),
+				'longitude' => $this->input->post('longitude',TRUE),
+				'ip_address' => 'N/A',
+				// 'foto' => null,
+				'telat' => cekTelat($this->input->post('jam',TRUE), $this->input->post('lapangan_id',TRUE), $this->input->post('jenis_absen',TRUE)),
+				'status' => $this->input->post('jenis_absen',TRUE) == 'masuk' ? 1 : 2,
+	    	);
+
+			$filelampiran = $_FILES['lampiran'] ?? FALSE;
+			if ($filelampiran) {
+
+				$apakahadafilelama = $this->input->post('lampiran_old',TRUE) ?? FALSE;
+				if ($apakahadafilelama) {
+					unlink('./assets/assets/img/user/izin/'.$this->input->post('lampiran_old',TRUE));
+				}
+
+				$config['upload_path']      = './assets/assets/img/bukti_absen';
+				$config['allowed_types']    = 'jpg|png|jpeg';
+				$config['max_size']         = 10048;
+				$config['file_name']        = $data['users_id'].'-' . date('ymd') . '-' . substr(sha1(rand()), 0, 10);
+				$this->load->library('upload', $config);
+				if ( ! $this->upload->do_upload('foto'))
+				{
+					$this->session->set_flashdata('error', $this->upload->display_errors());
+					$this->update(encrypt_url($this->input->post('id', TRUE)));
+					return;
+				}
+				else
+				{
+					$upload_data = $this->upload->data();
+					$data['foto'] = $upload_data['file_name'];
+				}
+			}
 
             $this->Tbl_absensi_model->update($this->input->post('id', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');

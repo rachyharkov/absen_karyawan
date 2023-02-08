@@ -45,7 +45,7 @@
 										<input type="text" name="jenis_absen" id="jenis_absen" value="<?php echo $jenis_absen; ?>" class="form-control" readonly>
 									</td>
 								</tr>
-								<tr>
+								<tr hidden>
 									<td>Lapangan id <?php echo form_error('lapangan_id') ?></td>
 									<td>
 									<input type="text" class="form-control" required name="lapangan_id" id="lapangan_id" placeholder="lapangan_id" readonly
@@ -71,13 +71,17 @@
 								<tr>
 									<td>Foto <?php echo form_error('foto') ?></td>
 									<td>
-										<input type="file" class="form-control" required name="foto" id="foto" placeholder="foto" />
 										<?php
 											if($button == 'Update' && $foto != NULL) {
 												?>
+													<input type="file" class="form-control" name="foto" id="foto" placeholder="foto" />
 													<br>
 													<a href="<?php echo base_url('assets/assets/img/bukti_absen/'.$foto) ?>" target="_blank">Lihat foto</a>
 													<input type="hidden" name="foto_old" value="<?php echo $foto; ?>" />
+												<?php
+											} else {
+												?>
+													<input type="file" class="form-control" required name="foto" id="foto" placeholder="foto" />
 												<?php
 											}
 										?>
@@ -128,18 +132,20 @@
   <script>
   $(document).ready(function() {
 
-		<?php
-		if($button == 'Update' || $users_id != NULL) {
-			$getdatausers = $this->db->get_where('tbl_users', ['id' => $users_id])->row();
-			$idnya = $getdatausers->id;
-			$usernamenya = $getdatausers->username;
-			$namanya = $getdatausers->nama_lengkap;
-			?>
-				$('#users_id')[0].selectize.addOption({id: '<?php echo $idnya ?>', text: '<?php echo $namanya.' - '.$usernamenya ?>'});
-				$('#users_id')[0].selectize.setValue('<?php echo $idnya ?>');
-			<?php
+		let perhatian = '<?= $button == 'Update' ? 'true' : 'false' ?>';
+
+		if (perhatian == 'true') {
+			Swal.fire({
+				icon: 'info',
+				title: 'Perhatian',
+				text: 'Dengan mengubah data absensi, maka anda berhak tanggung jawab atas data yang di ubah, hanya ubah data jika terjadi kesalahan input absensi',
+				confirmButtonText: 'Oke'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					perhatian = 'false';
+				}
+			})
 		}
-		?>
 
     function checkKosongLatLong() {
       if ($('#latitude').val() == '' || $('#longitude').val() == '') {
@@ -188,7 +194,7 @@
 					},
 					success: function(res) {
 
-						if(res.jenis_absen == 'udah_absen') {
+						if(res.jenis_absen == 'udah_absen' && perhatian == 'false') {
 							Swal.fire({
 								icon: 'error',
 								title: 'Oops...',
@@ -296,6 +302,19 @@
 		$(document).on('change', '#tanggal', function() {
 			getInfoAbsensi()
 		})
+
+		<?php
+		if($button == 'Update' || $users_id != NULL) {
+			$getdatausers = $this->db->get_where('tbl_users', ['id' => $users_id])->row();
+			$idnya = $getdatausers->id;
+			$usernamenya = $getdatausers->username;
+			$namanya = $getdatausers->nama_lengkap;
+			?>
+				$('#users_id')[0].selectize.addOption({id: '<?php echo $idnya ?>', text: '<?php echo $namanya.' - '.$usernamenya ?>'});
+				$('#users_id')[0].selectize.setValue('<?php echo $idnya ?>');
+			<?php
+		}
+		?>
   })
   </script>
 </div>
