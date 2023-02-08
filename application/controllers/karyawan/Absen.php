@@ -13,8 +13,8 @@ class Absen extends CI_Controller
 
 	public function index()
 	{
-		$apakahAdaAbsenOrangIniHariIni = $this->db->query("SELECT * FROM tbl_absensi WHERE users_id = '".$this->session->userdata('userid')."' AND DATE(tanggal) = CURDATE()");
-
+		$apakahAdaAbsenOrangIniHariIni = $this->db->query("SELECT * FROM tbl_absensi WHERE users_id = '".$this->session->userdata('userid')."' AND DATE(tanggal) = CURDATE() ORDER BY jam DESC");
+		
 		$actionAbsen = null;
 
 		$adaabsenapaenggak = null;
@@ -24,12 +24,16 @@ class Absen extends CI_Controller
 			$actionAbsen = 'Masuk';
 		}
 
-		if($apakahAdaAbsenOrangIniHariIni->num_rows() == 1) {
+		if($apakahAdaAbsenOrangIniHariIni->num_rows() == 1 && $apakahAdaAbsenOrangIniHariIni->last_row()->status == 1) {
 			$adaabsenapaenggak = true;
 			$actionAbsen = 'Keluar';
 		}
 
-		if($apakahAdaAbsenOrangIniHariIni->num_rows() >= 2) {
+		if(
+			$apakahAdaAbsenOrangIniHariIni->num_rows() >= 2 || (
+					$apakahAdaAbsenOrangIniHariIni->num_rows() == 1 && ($apakahAdaAbsenOrangIniHariIni->last_row()->status != 1 || $apakahAdaAbsenOrangIniHariIni->last_row()->status != 1)
+				)
+		) {
 			$adaabsenapaenggak = null;
 			$actionAbsen = 'Sudah Absen';
 		}

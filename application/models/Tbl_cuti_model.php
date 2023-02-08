@@ -16,12 +16,20 @@ class Tbl_cuti_model extends CI_Model
     }
 
     // get all
-    function get_all()
+    function get_all($user_id = null)
     {
-        $this->db->select('tbl_cuti.*, tbl_users.nama_lengkap');
-		$this->db->join('tbl_users', 'tbl_users.id = tbl_cuti.users_id');
-		$this->db->order_by($this->id, $this->order);
-		return $this->db->get($this->table)->result();
+		if($user_id) {
+			$this->db->select('tbl_cuti.*, tbl_users.nama_lengkap');
+			$this->db->join('tbl_users', 'tbl_users.id = tbl_cuti.users_id');
+			$this->db->where('tbl_cuti.users_id', $user_id);
+			$this->db->order_by($this->id, $this->order);
+			return $this->db->get($this->table)->result();
+		} else {
+			$this->db->select('tbl_cuti.*, tbl_users.nama_lengkap');
+			$this->db->join('tbl_users', 'tbl_users.id = tbl_cuti.users_id');
+			$this->db->order_by($this->id, $this->order);
+			return $this->db->get($this->table)->result();
+		}
     }
 
     // get data by id

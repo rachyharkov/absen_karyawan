@@ -73,9 +73,9 @@
 							<button id="start-camera" type="button" class="btn btn-danger w-100">Ambil Foto</button>
 							<button id="click-photo" type="button" class="btn w-100 btn-success" style="display: none;">Click Photo</button>
 						</div>
-						<input type="text" name="latitude" id="latitude">
-						<input type="text" name="longitude" id="longitude">
-						<input type="text" name="imageDataURL" id="photo">
+						<input type="hidden" name="latitude" id="latitude">
+						<input type="hidden" name="longitude" id="longitude">
+						<input type="hidden" name="imageDataURL" id="photo">
 						<button id="btn-act-absen" type="submit" class="btn btn-absen btn-primary mt-2 w-100"><?= $masukataupulang ?></button>
 					</div>
 				</form>
