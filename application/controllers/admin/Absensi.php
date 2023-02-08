@@ -207,11 +207,16 @@ class Absensi extends CI_Controller
 
         if ($row) {
             $this->Tbl_absensi_model->delete(decrypt_url($id));
+			
+			if(file_exists('./assets/assets/img/bukti_absen/'.$row->foto) && $row->foto){
+				unlink('./assets/assets/img/bukti_absen/'.$row->foto);
+			}
+
             $this->session->set_flashdata('message', 'Delete Record Success');
-            redirect(levelUser($this->session->userdata('level')).'absensi');
+            redirect(levelUser($this->session->userdata('level')).'/absensi');
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(levelUser($this->session->userdata('level')).'absensi');
+            redirect(levelUser($this->session->userdata('level')).'/absensi');
         }
     }
 
