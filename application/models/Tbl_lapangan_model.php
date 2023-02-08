@@ -96,6 +96,16 @@ class Tbl_lapangan_model extends CI_Model
 		return $query->num_rows();
 	}
 
+	function get_by_keyword($keyword) {
+		$this->db->like('nama_lapangan', $keyword);
+		$query = $this->db->get('tbl_lapangan');
+		return $query->result();
+	}
+
+	function get_lapangan_user($users_id) {
+		$query = $this->db->query('SELECT * FROM tbl_lapangan WHERE id IN (SELECT id_lapangan FROM tbl_penempatan_karyawan WHERE id_users = '.$users_id.')');
+		return $query->row();
+	}
 }
 
 /* End of file Tbl_lapangan_model.php */

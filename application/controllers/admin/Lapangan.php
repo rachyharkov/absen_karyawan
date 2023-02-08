@@ -13,6 +13,7 @@ class Lapangan extends CI_Controller
 			'Tbl_lapangan_model',
 			'Manage_users_model'
 		]);
+		$this->load->helper('fungsi');
         $this->load->library('form_validation');
     }
 
@@ -189,6 +190,40 @@ class Lapangan extends CI_Controller
 		);
 
 		echo json_encode($response);
+	}
+
+	public function find_lapangan() {
+		$keyword = $this->input->get('q');
+		$data = $this->Tbl_lapangan_model->get_by_keyword($keyword);
+		// output for selectize output
+		$output = [
+			'data' => [],
+			'more' => false,
+		];
+		foreach ($data as $row) {
+			$output['data'][] = [
+				'id' => $row->id,
+				'text' => $row->nama_lapangan,
+			];
+		}
+		echo json_encode($output);
+	}
+
+	public function get_lapangan() {
+		$id = $this->input->get('id');
+		$data = $this->Tbl_lapangan_model->get_by_id($id);
+
+		$resp = [
+			'data' => [
+				'id' => $data->id,
+				'nama_lapangan' => $data->nama_lapangan,
+				'latitude' => $data->latitude,
+				'longitude' => $data->longitude,
+				'radius_diizinkan' => $data->radius_diizinkan,
+			]
+		];
+
+		echo json_encode($data);
 	}
 
     public function _rules() 

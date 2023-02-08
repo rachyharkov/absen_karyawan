@@ -177,27 +177,27 @@ class Cuti extends CI_Controller
 				}
 			}
 
-            $this->Tbl_cuti_model->update($this->input->post('id', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
-            redirect(levelUser($this->session->userdata('level')).'/cuti');
-        }
+					$this->Tbl_cuti_model->update($this->input->post('id', TRUE), $data);
+					$this->session->set_flashdata('message', 'Update Record Success');
+					redirect(levelUser($this->session->userdata('level')).'/cuti');
+			}
     }
     
     public function delete($id) 
     {
-        $row = $this->Tbl_cuti_model->get_by_id(decrypt_url($id));
+      $row = $this->Tbl_cuti_model->get_by_id(decrypt_url($id));
 
-        if ($row) {
-			if($row->lampiran) {
-				unlink('./assets/assets/img/user/cuti/'.$row->lampiran);
+      if ($row) {
+				if($row->lampiran) {
+					unlink('./assets/assets/img/bukti_absen/'.$row->lampiran);
+				}
+				$this->Tbl_cuti_model->delete(decrypt_url($id));
+				$this->session->set_flashdata('message', 'Delete Record Success');
+				redirect(levelUser($this->session->userdata('level')).'/cuti');
+			} else {
+				$this->session->set_flashdata('message', 'Record Not Found');
+				redirect(levelUser($this->session->userdata('level')).'/cuti');
 			}
-            $this->Tbl_cuti_model->delete(decrypt_url($id));
-            $this->session->set_flashdata('message', 'Delete Record Success');
-            redirect(levelUser($this->session->userdata('level')).'/cuti');
-        } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(levelUser($this->session->userdata('level')).'/cuti');
-        }
     }
 
 	public function get_user_by_name_or_username() {
@@ -209,7 +209,7 @@ class Cuti extends CI_Controller
 			'more' => false,
 		];
 
-		if (count($data) > 0) {
+		if ($data) {
 			foreach ($data as $key => $value) {
 				$output['data'][] = [
 					'id' => $value->id,

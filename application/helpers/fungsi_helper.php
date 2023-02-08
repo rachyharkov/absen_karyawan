@@ -109,6 +109,38 @@ function apakahDataIzinAda($tanggal, $user_id, $jenisdata = null) {
 	return 'ga_ada';
 }
 
+function cekTelat($jam, $lapangannya, $jenis) {
+	$ci = &get_instance();
+	$ci->load->model('Tbl_lapangan_model');
+	$lapangan = $ci->Tbl_lapangan_model->get_by_id($lapangannya);
+	
+	if($jenis == 'masuk') {
+		$jam_masuk = $lapangan->jam_masuk_diizinkan;
+		$jam_masuk = explode(':', $jam_masuk);
+		$jam_masuk = $jam_masuk[0];
+		$jam = explode(':', $jam);
+		$jam = $jam[0];
+		$telat = $jam - $jam_masuk;
+		if($telat > 0) {
+			return 1;
+		}
+	}
+
+	if($jenis == 'pulang') {
+		$jam_pulang = $lapangan->jam_keluar_diizinkan;
+		$jam_pulang = explode(':', $jam_pulang);
+		$jam_pulang = $jam_pulang[0];
+		$jam = explode(':', $jam);
+		$jam = $jam[0];
+		$telat = $jam_pulang - $jam;
+		if($telat > 0) {
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
 //format rupiah
 function rupiah($angka = null)
 {
@@ -118,6 +150,25 @@ function rupiah($angka = null)
 		$hasil_rupiah = number_format($angka, 0, ',', '.');
 		return $hasil_rupiah;
 	}
+}
+
+function deteksiMasukAtauPulang($users_id, $tanggal) {
+	$ci = &get_instance();
+	$ci->load->model('Tbl_absensi_model');
+	$absensi = $ci->Tbl_absensi_model->get_by_users_id_and_tanggal($users_id, $tanggal);
+
+	if($absensi) {
+		
+		if($absensi->status == 1) {
+			return 'pulang';
+		} else {
+			return 'udah_absen';
+		}
+	} else {
+		return 'masuk';
+	}
+
+
 }
 
 function levelUser($level_id) {

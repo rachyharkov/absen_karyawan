@@ -10,6 +10,7 @@ class Manage_users extends CI_Controller
         parent::__construct();
         is_login();
         $this->load->model('Manage_users_model');
+				$this->load->helper('fungsi');
         $this->load->library('form_validation');
     }
 
@@ -195,6 +196,25 @@ class Manage_users extends CI_Controller
             redirect(site_url(levelUser($this->session->userdata('level')).'/manage_users'));
         }
     }
+
+		public function get_info() {
+			$users_id = $this->input->get('id');
+			$tanggal = $this->input->get('tanggal');
+			$this->load->model('Tbl_lapangan_model');
+			$datany = $this->Tbl_lapangan_model->get_lapangan_user($users_id);
+			$jenis_absen = deteksiMasukAtauPulang($users_id, $tanggal);
+	
+			$resp = [
+				'id' => $datany->id,
+				'nama_lapangan' => $datany->nama_lapangan,
+				'latitude' => $datany->latitude,
+				'longitude' => $datany->longitude,
+				'radius_diizinkan' => $datany->radius_diizinkan,
+				'jenis_absen' => $jenis_absen,
+			];
+	
+			echo json_encode($resp);
+		}
 
     public function _rules() 
     {

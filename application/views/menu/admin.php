@@ -8,7 +8,7 @@
 </div>
 
 <div class="menu-item">
-  <a href="<?= base_url() ?>admin/izin" class="menu-link">
+  <a href="<?= base_url() ?>admin/absensi" class="menu-link">
     <div class="menu-icon">
       <i class="fa fa-list"></i>
     </div>

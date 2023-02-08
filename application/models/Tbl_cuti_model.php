@@ -65,11 +65,8 @@ class Tbl_cuti_model extends CI_Model
     }
 
 	function get_user_by_name_or_username($keyword) {
-		$this->db->select('id, nama_lengkap, username');
-		$this->db->like('nama_lengkap', $keyword);
-		$this->db->or_like('username', $keyword);
-		$this->db->limit(10);
-		return $this->db->get('tbl_users')->result();
+		$query = $this->db->query("SELECT * FROM tbl_users JOIN tbl_penempatan_karyawan ON tbl_penempatan_karyawan.id_users = tbl_users.id WHERE tbl_users.nama_lengkap LIKE '%$keyword%' OR tbl_users.username LIKE '%$keyword%' LIMIT 10")->result();
+		return $query;
 	}
 
 	function get_by_tanggal_user_id($tanggal,$user_id){
