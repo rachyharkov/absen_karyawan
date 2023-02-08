@@ -32,11 +32,13 @@ class Auth extends CI_Controller
 				$row = $query->row();
 				$params = array(
 					'userid' => $row->id,
-					'level' => isset($row->level) ?? 4
+					'level' => isset($row->level) ? $row->level : 4
 				);
 				
 				$this->load->helper('fungsi');
 				$levelusernya = levelUser($params['level']);
+
+				// print_r($params['level']);
 
 				if($levelusernya == 'karyawan') {
 					$params['lapangan_id'] = cek_asal_lapangan($params['userid']);
