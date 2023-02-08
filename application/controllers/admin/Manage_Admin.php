@@ -145,9 +145,6 @@ class Manage_admin extends CI_Controller
 					unlink('./assets/assets/img/user/'.$old_photo);
 				}
 			}
-
-
-
             $this->Manage_admin_model->update($this->input->post('id', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
             redirect(site_url(levelUser($this->session->userdata('level')).'/manage_admin'));
