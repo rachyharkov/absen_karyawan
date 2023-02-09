@@ -69,23 +69,23 @@ class Absen extends CI_Controller
 			redirect('karyawan/absen');
 		}
 
-		$apakahAdaAbsenOrangIniHariIni = $this->db->query("SELECT * FROM tbl_absensi WHERE users_id = '".$this->session->userdata('userid')."' AND DATE(tanggal) = CURDATE()");
-		$getDataLapangan = $this->db->query("SELECT * FROM tbl_lapangan WHERE id = '".$this->session->userdata('lapangan_id')."'")->row();
+		// $apakahAdaAbsenOrangIniHariIni = $this->db->query("SELECT * FROM tbl_absensi WHERE users_id = '".$this->session->userdata('userid')."' AND DATE(tanggal) = CURDATE()");
+		// $getDataLapangan = $this->db->query("SELECT * FROM tbl_lapangan WHERE id = '".$this->session->userdata('lapangan_id')."'")->row();
 
-		if($apakahAdaAbsenOrangIniHariIni->num_rows() > 2) {
-			$this->session->set_flashdata('error', 'Anda sudah absen hari ini!');
-			redirect('karyawan/absen');
-		}
+		// if($apakahAdaAbsenOrangIniHariIni->num_rows() > 2) {
+		// 	$this->session->set_flashdata('error', 'Anda sudah absen hari ini!');
+		// 	redirect('karyawan/absen');
+		// }
 
-		$status = null;
+		// $status = null;
 
-		if($apakahAdaAbsenOrangIniHariIni->num_rows() == false || $apakahAdaAbsenOrangIniHariIni->num_rows() == 0) {
-			$status = 1; // Masuk
-		}
+		// if($apakahAdaAbsenOrangIniHariIni->num_rows() == false || $apakahAdaAbsenOrangIniHariIni->num_rows() == 0) {
+		// 	$status = 1; // Masuk
+		// }
 
-		if($apakahAdaAbsenOrangIniHariIni->num_rows() == 1) {
-			$status = 2; // Pulang
-		}
+		// if($apakahAdaAbsenOrangIniHariIni->num_rows() == 1) {
+		// 	$status = 2; // Pulang
+		// }
 
 		$dataURL = str_replace('data:image/png;base64,', '', $dataURL);
 		$dataURL = str_replace(' ', '+', $dataURL);
@@ -105,7 +105,7 @@ class Absen extends CI_Controller
 			'foto' => $filename,
 			'ip_address' => $this->input->ip_address(),
 			'telat' => $jam > $getDataLapangan->jam_masuk_diizinkan ? 1 : 0,
-			'status' => $status
+			'status' => NULL
 		);
 
 		$this->db->insert('tbl_absensi', $data);
