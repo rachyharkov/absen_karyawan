@@ -177,7 +177,7 @@ function levelUser($level_id) {
 	}
 
 	if($level_id == 2) {
-		return 'owner';
+		return 'pimpinan';
 	}
 
 	if($level_id == 3) {

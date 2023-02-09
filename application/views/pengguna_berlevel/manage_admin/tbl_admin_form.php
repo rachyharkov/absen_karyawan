@@ -51,7 +51,7 @@
 									<div class="form-check mb-2">
 										<input class="form-check-input" type="radio" name="level" id="level2" value="2" <?php echo $level == 2 ? "checked" : "" ?>>
 										<label class="form-check-label" for="level2">
-											Owner
+											Pimpinan
 										</label>
 									</div>
 									<div class="form-check mb-2">

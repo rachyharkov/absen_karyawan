@@ -165,7 +165,7 @@
 					if($this->session->userdata('level') == 1) {
 						$this->load->view('menu/admin');
 					} else if($this->session->userdata('level') == 2) {
-						$this->load->view('menu/owner');
+						$this->load->view('menu/pimpinan');
 					} else if($this->session->userdata('level') == 3) {
 						$this->load->view('menu/koordinator_lapangan');
 					} else {

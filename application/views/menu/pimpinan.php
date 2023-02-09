@@ -1,5 +1,5 @@
 <div class="menu-item">
-  <a href="<?= base_url() ?>owner/Dashboard" class="menu-link">
+  <a href="<?= base_url() ?>pimpinan/Dashboard" class="menu-link">
     <div class="menu-icon">
       <i class="fa fa-home"></i>
     </div>
@@ -8,7 +8,7 @@
 </div>
 
 <div class="menu-item">
-  <a href="<?= base_url() ?>owner/izin" class="menu-link">
+  <a href="<?= base_url() ?>pimpinan/izin" class="menu-link">
     <div class="menu-icon">
       <i class="fa fa-list"></i>
     </div>
@@ -16,7 +16,7 @@
   </a>
 </div>
 <div class="menu-item">
-  <a href="<?= base_url() ?>owner/lapangan" class="menu-link">
+  <a href="<?= base_url() ?>pimpinan/lapangan" class="menu-link">
     <div class="menu-icon">
       <i class="fas fa-map-marked"></i>
     </div>
@@ -24,7 +24,7 @@
   </a>
 </div>
 <div class="menu-item">
-  <a href="<?= base_url() ?>owner/izin" class="menu-link">
+  <a href="<?= base_url() ?>pimpinan/izin" class="menu-link">
     <div class="menu-icon">
       <i class="fa fa-calendar"></i>
     </div>
@@ -32,7 +32,7 @@
   </a>
 </div>
 <div class="menu-item">
-  <a href="<?= base_url() ?>owner/izin" class="menu-link">
+  <a href="<?= base_url() ?>pimpinan/izin" class="menu-link">
     <div class="menu-icon">
       <i class="fa fa-calendar"></i>
     </div>
@@ -40,7 +40,7 @@
   </a>
 </div>
 <div class="menu-item">
-  <a href="<?= base_url() ?>owner/manage_users" class="menu-link">
+  <a href="<?= base_url() ?>pimpinan/manage_users" class="menu-link">
     <div class="menu-icon">
       <i class="fa fa-users"></i>
     </div>
@@ -48,7 +48,7 @@
   </a>
 </div>
 <div class="menu-item">
-  <a href="<?= base_url() ?>owner/manage_admin" class="menu-link">
+  <a href="<?= base_url() ?>pimpinan/manage_admin" class="menu-link">
     <div class="menu-icon">
       <i class="fa fa-users"></i>
     </div>
