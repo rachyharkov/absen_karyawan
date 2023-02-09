@@ -16,11 +16,21 @@ class Tbl_absensi_model extends CI_Model
     }
 
     // get all
-    function get_all()
+    function get_all($lapangan_id = null)
     {
-        $this->db->order_by($this->id, $this->order);
-        return $this->db->get($this->table)->result();
+		if($lapangan_id != null) {
+			 $userlistInLapangan = $this->db->query("SELECT * FROM tbl_absensi WHERE users_id IN (SELECT id_users FROM tbl_penempatan_karyawan WHERE id_lapangan = '$lapangan_id') ORDER BY tanggal DESC, jam DESC")->result();
+			 return $userlistInLapangan;
+		} else {
+			$this->db->order_by($this->id, $this->order);
+			return $this->db->get($this->table)->result();
+		}
     }
+
+	function get_all_with_users_identity() {
+		$data = $this->db->query("SELECT * FROM tbl_absensi INNER JOIN tbl_users ON tbl_absensi.users_id = tbl_users.id ORDER BY tanggal DESC, jam DESC")->result();
+		return $data;
+	}
 
     // get data by id
     function get_by_id($id)

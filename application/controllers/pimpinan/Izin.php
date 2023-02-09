@@ -3,44 +3,43 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Sakit extends CI_Controller
+class Izin extends CI_Controller
 {
     function __construct()
     {
         parent::__construct();
         is_login();
-        $this->load->model('Tbl_sakit_model');
+        $this->load->model('Tbl_izin_model');
         $this->load->library('form_validation');
     }
 
     public function index()
     {
-        $sakit = $this->Tbl_sakit_model->get_all();
+        $izin = $this->Tbl_izin_model->get_all();
         $data = array(
-            'sakit_data' => $sakit,
+            'izin_data' => $izin,
         );
-        $this->template->load('template','pengguna_berlevel/sakit/tbl_sakit_list', $data);
+        $this->template->load('template','pengguna_berlevel/izin/tbl_izin_list', $data);
     }
 
     public function read($id) 
     {
-        $row = $this->Tbl_sakit_model->get_by_id(decrypt_url($id));
+        $row = $this->Tbl_izin_model->get_by_id(decrypt_url($id));
         if ($row) {
-            $data = array(
-				
-		'id' => $row->id,
-		'users_id' => $row->users_id,
-		'tanggal' => $row->tanggal,
-		'alasan' => $row->alasan,
-		'lampiran' => $row->lampiran,
-		'status' => $row->status,
-		'created_at' => $row->created_at,
-		'updated_at' => $row->updated_at,
-	    );
-            $this->template->load('template','pengguna_berlevel/sakit/tbl_sakit_read', $data);
+            $data = array(	
+				'id' => $row->id,
+				'users_id' => $row->users_id,
+				'tanggal' => $row->tanggal,
+				'alasan' => $row->alasan,
+				'lampiran' => $row->lampiran,
+				'status' => $row->status,
+				'created_at' => $row->created_at,
+				'updated_at' => $row->updated_at,
+	    	);
+            $this->template->load('template','pengguna_berlevel/izin/tbl_izin_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(site_url(levelUser($this->session->userdata('level')).'sakit'));
+            redirect(site_url(levelUser($this->session->userdata('level')).'/izin'));
         }
     }
 
@@ -48,13 +47,13 @@ class Sakit extends CI_Controller
     {
         $data = array(
             'button' => 'Create',
-            'action' => site_url(levelUser($this->session->userdata('level')).'/sakit/create_action'),
+            'action' => site_url(levelUser($this->session->userdata('level')).'/izin/create_action'),
 			'id' => set_value('id'),
 			'users_id' => set_value('users_id'),
 			'tanggal' => set_value('tanggal'),
 			'alasan' => set_value('alasan'),
 		);
-        $this->template->load('template','pengguna_berlevel/sakit/tbl_sakit_form', $data);
+        $this->template->load('template','pengguna_berlevel/izin/tbl_izin_form', $data);
     }
     
     public function create_action() 
@@ -84,7 +83,7 @@ class Sakit extends CI_Controller
 
 			$filelampiran = isset($_FILES['lampiran']) ? $_FILES['lampiran'] : FALSE;
 			if ($filelampiran) {
-				$config['upload_path']      = './assets/assets/img/user/sakit';
+				$config['upload_path']      = './assets/assets/img/user/izin';
 				$config['allowed_types']    = 'jpg|png|jpeg';
 				$config['max_size']         = 10048;
 				$config['file_name']        = 'bukti-' . date('ymd') . '-' . substr(sha1(rand()), 0, 10);
@@ -102,20 +101,20 @@ class Sakit extends CI_Controller
 				}
 			}
 
-            $this->Tbl_sakit_model->insert($data);
+            $this->Tbl_izin_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success');
-            redirect(levelUser($this->session->userdata('level')).'/sakit');
+            redirect(levelUser($this->session->userdata('level')).'/izin');
         }
     }
     
     public function update($id) 
     {
-        $row = $this->Tbl_sakit_model->get_by_id(decrypt_url($id));
+        $row = $this->Tbl_izin_model->get_by_id(decrypt_url($id));
 
         if ($row) {
             $data = array(
                 'button' => 'Update',
-                'action' => site_url(levelUser($this->session->userdata('level')).'/sakit/update_action'),
+                'action' => site_url(levelUser($this->session->userdata('level')).'/izin/update_action'),
 				'id' => set_value('id', $row->id),
 				'users_id' => set_value('users_id', $row->users_id),
 				'tanggal' => set_value('tanggal', $row->tanggal),
@@ -123,10 +122,10 @@ class Sakit extends CI_Controller
 				'lampiran' => set_value('lampiran', $row->lampiran),
 				'lampiran_old' => set_value('lampiran', $row->lampiran),
 	    	);
-            $this->template->load('template','pengguna_berlevel/sakit/tbl_sakit_form', $data);
+            $this->template->load('template','pengguna_berlevel/izin/tbl_izin_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(levelUser($this->session->userdata('level')).'/sakit');
+            redirect(levelUser($this->session->userdata('level')).'/izin');
         }
     }
     
@@ -154,14 +153,14 @@ class Sakit extends CI_Controller
 				'updated_at' => date('Y-m-d H:i:s'),
 	    	);
 
-			$filelampiran = $_FILES['lampiran'] == null ? FALSE : TRUE;
+			$filelampiran = $_FILES['lampiran'] ?? FALSE;
 			if ($filelampiran) {
 
 				$apakahadafilelama = $this->input->post('lampiran_old',TRUE) ?? FALSE;
 				if ($apakahadafilelama) {
-					unlink('./assets/assets/img/user/sakit/'.$this->input->post('lampiran_old',TRUE));
+					unlink('./assets/assets/img/user/izin/'.$this->input->post('lampiran_old',TRUE));
 				}
-				$config['upload_path']      = './assets/assets/img/user/sakit';
+				$config['upload_path']      = './assets/assets/img/user/izin';
 				$config['allowed_types']    = 'jpg|png|jpeg';
 				$config['max_size']         = 10048;
 				$config['file_name']        = 'bukti-' . date('ymd') . '-' . substr(sha1(rand()), 0, 10);
@@ -173,49 +172,28 @@ class Sakit extends CI_Controller
 				}
 			}
 
-            $this->Tbl_sakit_model->update($this->input->post('id', TRUE), $data);
+            $this->Tbl_izin_model->update($this->input->post('id', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
-            redirect(levelUser($this->session->userdata('level')).'/sakit');
+            redirect(levelUser($this->session->userdata('level')).'/izin');
         }
     }
     
     public function delete($id) 
     {
-        $row = $this->Tbl_sakit_model->get_by_id(decrypt_url($id));
+        $row = $this->Tbl_izin_model->get_by_id(decrypt_url($id));
 
         if ($row) {
 			if($row->lampiran) {
-				unlink('./assets/assets/img/user/sakit/'.$row->lampiran);
+				unlink('./assets/assets/img/user/cuti/'.$row->lampiran);
 			}
-            $this->Tbl_sakit_model->delete(decrypt_url($id));
+            $this->Tbl_izin_model->delete(decrypt_url($id));
             $this->session->set_flashdata('message', 'Delete Record Success');
-            redirect(levelUser($this->session->userdata('level')).'/sakit');
+            redirect(levelUser($this->session->userdata('level')).'/izin');
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(levelUser($this->session->userdata('level')).'/sakit');
+            redirect(levelUser($this->session->userdata('level')).'/izin');
         }
     }
-
-	public function get_user_by_name_or_username() {
-		$keyword = $this->input->get('q');
-		$data = $this->Tbl_cuti_model->get_user_by_name_or_username($keyword);
-
-		$output = [
-			'data' => [],
-			'more' => false,
-		];
-
-		if (count($data) > 0) {
-			foreach ($data as $key => $value) {
-				$output['data'][] = [
-					'id' => $value->id,
-					'text' => $value->nama_lengkap . ' - ' . $value->username,
-				];
-			}
-		}
-
-		echo json_encode($output);
-	}
 
 	public function update_status($id_users, $status) {
 
@@ -224,35 +202,10 @@ class Sakit extends CI_Controller
 			'updated_at' => date('Y-m-d H:i:s'),
 		];
 
-		$this->Tbl_sakit_model->update($id_users, $data);
-
-		if($status == 'approved') {
-			$this->load->model([
-				'Tbl_lapangan_model',
-				'Tbl_absensi_model'
-			]);
-
-			$dataLapanganUser = $this->Tbl_lapangan_model->get_lapangan_user($id_users);
-
-			$datanya = [
-				'users_id' => $id_users,
-				'tanggal' => date('Y-m-d'),
-				'jam' => date('H:i:s'),
-				'latitude' => $dataLapanganUser->latitude,
-				'longitude' => $dataLapanganUser->longitude,
-				'foto' => '-',
-				'keterangan' => 'sakit',
-				'ip_address' => 'N/A',
-				'telat' => 0,
-				'status' => 6
-			];
-
-			$this->Tbl_absensi_model->insert($datanya);
-			
-		}
+		$this->Tbl_izin_model->update($id_users, $data);
 
 		$this->session->set_flashdata('message', 'Update Record Success');
-		redirect(levelUser($this->session->userdata('level')).'/sakit');
+		redirect(levelUser($this->session->userdata('level')).'/izin');
 	}
 
     public function _rules() 
@@ -267,8 +220,8 @@ class Sakit extends CI_Controller
 
 }
 
-/* End of file Sakit.php */
-/* Location: ./application/controllers/Sakit.php */
+/* End of file Izin.php */
+/* Location: ./application/controllers/Izin.php */
 /* Please DO NOT modify this information : */
-/* Generated by Harviacode Codeigniter CRUD Generator 2023-02-03 09:11:29 */
+/* Generated by Harviacode Codeigniter CRUD Generator 2023-02-03 09:11:05 */
 /* http://harviacode.com */

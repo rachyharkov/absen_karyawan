@@ -9,22 +9,18 @@ class Absensi extends CI_Controller
     {
         parent::__construct();
         is_login();
-        $this->load->model([
-					'Tbl_absensi_model',
-					'Tbl_lapangan_model'
-				]);
+        $this->load->model('Tbl_absensi_model');
 				$this->load->helper('fungsi');
         $this->load->library('form_validation');
     }
 
     public function index()
     {
-			// echo($this->session->userdata('id_lapangan_yang_dikoordinir'));
-        $absensi = $this->Tbl_absensi_model->get_all($this->session->userdata('id_lapangan_yang_dikoordinir'));
+        $absensi = $this->Tbl_absensi_model->get_all_with_users_identity();
         $data = array(
             'absensi_data' => $absensi,
         );
-        $this->template->load('template','pengguna_berlevel/absensi/tbl_absensi_list_with_approval', $data);
+        $this->template->load('template','pengguna_berlevel/absensi/tbl_absensi_list_report', $data);
     }
 
     public function read($id) 
@@ -44,7 +40,7 @@ class Absensi extends CI_Controller
 		'telat' => $row->telat,
 		'status' => $row->status,
 	    );
-            $this->template->load('template','pengguna_berlevel/absensi/tbl_absensi_list_with_approval', $data);
+            $this->template->load('template','pengguna_berlevel/absensi/tbl_absensi_list_report', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url(levelUser($this->session->userdata('level')).'absensi'));
@@ -237,45 +233,6 @@ class Absensi extends CI_Controller
 		$this->form_validation->set_rules('id', 'id', 'trim');
 		$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
-
-		public function update_status($id, $status) {
-
-			$absensiIni = $this->Tbl_absensi_model->get_by_id($id);
-
-			if($status == 'approved') {
-
-				$apakahAdaAbsenOrangIniPadaTanggalIni = $this->db->get_where('tbl_absensi', [
-					'users_id' => $absensiIni->users_id,
-					'tanggal' => $absensiIni->tanggal
-				]);
-
-				$id_usersnya = $absensiIni->users_id;
-				$getDataLapanganUser = $this->Tbl_lapangan_model->get_lapangan_user($id_usersnya); 
-
-				$status = 1; // Masuk
-
-				if($apakahAdaAbsenOrangIniPadaTanggalIni->num_rows() == 2) {
-					$status = 2; // Pulang
-				}
-
-				$data = [
-					'status' => $status,
-					'updated_at' => date('Y-m-d H:i:s'),
-				];
-		
-				$this->Tbl_absensi_model->update($id, $data);
-		
-				$this->session->set_flashdata('message', 'Update Record Success');
-				redirect(levelUser($this->session->userdata('level')).'/absensi');
-			} else {
-				if(file_exists('./assets/assets/img/bukti_absen/'.$absensiIni->foto) && $absensiIni->foto){
-					unlink('./assets/assets/img/bukti_absen/'.$absensiIni->foto);
-				}
-				$this->db->delete('tbl_absensi', ['id' => $id]);
-				$this->session->set_flashdata('message', 'Update Record Success');
-				redirect(levelUser($this->session->userdata('level')).'/absensi');
-			}
-		}
 
 }
 

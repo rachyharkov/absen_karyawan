@@ -184,7 +184,7 @@ class Izin extends CI_Controller
 
         if ($row) {
 			if($row->lampiran) {
-				unlink('./assets/assets/img/user/cuti/'.$row->lampiran);
+				unlink('./assets/assets/img/user/izin/'.$row->lampiran);
 			}
             $this->Tbl_izin_model->delete(decrypt_url($id));
             $this->session->set_flashdata('message', 'Delete Record Success');
@@ -195,18 +195,43 @@ class Izin extends CI_Controller
         }
     }
 
-	public function update_status($id_users, $status) {
+		public function update_status($id_users, $status) {
 
-		$data = [
-			'status' => $status,
-			'updated_at' => date('Y-m-d H:i:s'),
-		];
-
-		$this->Tbl_izin_model->update($id_users, $data);
-
-		$this->session->set_flashdata('message', 'Update Record Success');
-		redirect(levelUser($this->session->userdata('level')).'/izin');
-	}
+			$data = [
+				'status' => $status,
+				'updated_at' => date('Y-m-d H:i:s'),
+			];
+	
+			$this->Tbl_izin_model->update($id_users, $data);
+	
+			if($status == 'approved') {
+				$this->load->model([
+					'Tbl_lapangan_model',
+					'Tbl_absensi_model'
+				]);
+	
+				$dataLapanganUser = $this->Tbl_lapangan_model->get_lapangan_user($id_users);
+	
+				$datanya = [
+					'users_id' => $id_users,
+					'tanggal' => date('Y-m-d'),
+					'jam' => date('H:i:s'),
+					'latitude' => $dataLapanganUser->latitude,
+					'longitude' => $dataLapanganUser->longitude,
+					'foto' => '-',
+					'keterangan' => 'izin',
+					'ip_address' => 'N/A',
+					'telat' => 0,
+					'status' => 5
+				];
+	
+				$this->Tbl_absensi_model->insert($datanya);
+				
+			}
+	
+			$this->session->set_flashdata('message', 'Update Record Success');
+			redirect(levelUser($this->session->userdata('level')).'/izin');
+		}
 
     public function _rules() 
     {

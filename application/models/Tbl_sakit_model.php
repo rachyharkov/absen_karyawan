@@ -18,14 +18,14 @@ class Tbl_sakit_model extends CI_Model
     function get_all($user_id = null)
     {
 		if($user_id) {
-			$this->db->select('tbl_izin.*, tbl_users.nama_lengkap');
-			$this->db->join('tbl_users', 'tbl_users.id = tbl_izin.users_id');
-			$this->db->where('tbl_izin.users_id', $user_id);
+			$this->db->select('tbl_sakit.*, tbl_users.nama_lengkap');
+			$this->db->join('tbl_users', 'tbl_users.id = tbl_sakit.users_id');
+			$this->db->where('tbl_sakit.users_id', $user_id);
 			$this->db->order_by($this->id, $this->order);
 			return $this->db->get($this->table)->result();
 		} else {
-			$this->db->select('tbl_izin.*, tbl_users.nama_lengkap');
-			$this->db->join('tbl_users', 'tbl_users.id = tbl_izin.users_id');
+			$this->db->select('tbl_sakit.*, tbl_users.nama_lengkap');
+			$this->db->join('tbl_users', 'tbl_users.id = tbl_sakit.users_id');
 			$this->db->order_by($this->id, $this->order);
 			return $this->db->get($this->table)->result();
 		}

@@ -32,8 +32,13 @@ function cek_login_aja()
 function cek_asal_lapangan($user_id) {
 	$ci = &get_instance();
 	$ci->load->model('Manage_users_model');
-	$lapangan = $ci->Manage_users_model->getLapanganByUserId($user_id)->row();
-	return $lapangan->id_lapangan;
+	$lapangan = $ci->Manage_users_model->getLapanganByUserId($user_id);
+
+	if($lapangan) {
+		return $lapangan->row()->id_lapangan;
+	} else {
+		return false;
+	}
 }
 
 function count_users_active($lapangan_id = null) {
@@ -185,4 +190,26 @@ function levelUser($level_id) {
 	}
 
 	return 'karyawan';
+}
+
+function cek_lapangan_yang_dikoordinir($users_id) {
+	$ci = &get_instance();
+	$ci->load->model('Tbl_lapangan_model');
+
+	$lapangan = $ci->db->query("SELECT * FROM tbl_lapangan WHERE petugas = $users_id");
+	if($lapangan->num_rows() > 0) {
+		return $lapangan->row();
+	} else {
+		return null;
+	}
+}
+
+function cek_apakah_lapangan_memiliki_koordinator($lapangan_id) {
+	$ci = &get_instance();
+
+	$dataLapangan = $ci->db->query("SELECT * FROM tbl_lapangan WHERE id = $lapangan_id");
+
+	$apakahAdaKoordinatorLapangan = $dataLapangan->row()->petugas ? true : false;
+
+	return $apakahAdaKoordinatorLapangan;
 }

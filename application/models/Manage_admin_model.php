@@ -70,6 +70,11 @@ class Manage_admin_model extends CI_Model
 		return $query->result();
 	}
 
+	function find_petugas_koordinator_by_username_belum_ditugaskan($username, $level = null){
+		$listPetugas = $this->db->query('SELECT id, username FROM tbl_admin WHERE NOT EXISTS (SELECT petugas FROM tbl_lapangan WHERE petugas = tbl_admin.id) AND level = 3 AND username LIKE "%'.$username.'%"')->result();
+		return $listPetugas;
+	}
+
 }
 
 /* End of file Manage_admin_model.php */

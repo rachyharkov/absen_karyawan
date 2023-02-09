@@ -41,7 +41,37 @@ class Auth extends CI_Controller
 				// print_r($params['level']);
 
 				if($levelusernya == 'karyawan') {
-					$params['lapangan_id'] = cek_asal_lapangan($params['userid']);
+					$cekasallapangan = cek_asal_lapangan($params['userid']);
+					$apakahLapanganMemilikiKoordinator = cek_apakah_lapangan_memiliki_koordinator($cekasallapangan);
+
+					if(!$apakahLapanganMemilikiKoordinator) {
+						$this->session->set_flashdata('gagal', 'Login gagal, lapangan dimana anda ditempatkan belum memiliki koordinator, silahkan hubungi admin');
+						redirect(site_url('auth'));
+						return;
+					}
+					
+					if(!$cekasallapangan) {
+						$this->session->set_flashdata('gagal', 'Login gagal, anda belum ditempatkan pada lapangan, silahkan hubungi admin');
+						redirect(site_url('auth'));
+						return;
+					}
+
+					$params['lapangan_id'] = $cekasallapangan;
+				}
+
+				if($levelusernya == 'koordinator_lapangan') {
+					$lapanganYangDiKoordinir = cek_lapangan_yang_dikoordinir($row->id);
+
+					// var_dump($lapanganYangDiKoordinir->id);
+
+					if($lapanganYangDiKoordinir) {
+						$params['id_lapangan_yang_dikoordinir'] = $lapanganYangDiKoordinir->id;
+						$params['nama_lapangan_yang_dikoordinir'] = $lapanganYangDiKoordinir->nama_lapangan;
+					} else {
+						$this->session->set_flashdata('gagal', 'Login gagal, anda tidak memiliki lapangan yang dikoordinir, silahkan hubungi admin');
+						redirect(site_url('auth'));
+						return;
+					}
 				}
 
 				$this->session->set_userdata($params);

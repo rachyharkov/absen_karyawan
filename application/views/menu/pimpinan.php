@@ -8,19 +8,11 @@
 </div>
 
 <div class="menu-item">
-  <a href="<?= base_url() ?>pimpinan/izin" class="menu-link">
+  <a href="<?= base_url() ?>pimpinan/absensi" class="menu-link">
     <div class="menu-icon">
       <i class="fa fa-list"></i>
     </div>
     <div class="menu-text">Lihat Data Absen</div>
-  </a>
-</div>
-<div class="menu-item">
-  <a href="<?= base_url() ?>pimpinan/lapangan" class="menu-link">
-    <div class="menu-icon">
-      <i class="fas fa-map-marked"></i>
-    </div>
-    <div class="menu-text">Lapangan</div>
   </a>
 </div>
 <div class="menu-item">
@@ -32,7 +24,7 @@
   </a>
 </div>
 <div class="menu-item">
-  <a href="<?= base_url() ?>pimpinan/izin" class="menu-link">
+  <a href="<?= base_url() ?>pimpinan/cuti" class="menu-link">
     <div class="menu-icon">
       <i class="fa fa-calendar"></i>
     </div>
@@ -40,18 +32,10 @@
   </a>
 </div>
 <div class="menu-item">
-  <a href="<?= base_url() ?>pimpinan/manage_users" class="menu-link">
+  <a href="<?= base_url() ?>pimpinan/sakit" class="menu-link">
     <div class="menu-icon">
-      <i class="fa fa-users"></i>
+      <i class="fa fa-calendar"></i>
     </div>
-    <div class="menu-text">Data Karyawan</div>
-  </a>
-</div>
-<div class="menu-item">
-  <a href="<?= base_url() ?>pimpinan/manage_admin" class="menu-link">
-    <div class="menu-icon">
-      <i class="fa fa-users"></i>
-    </div>
-    <div class="menu-text">Data Admin</div>
+    <div class="menu-text">Kelola Data Sakit</div>
   </a>
 </div>

@@ -156,6 +156,20 @@
                   </div>
                 </div>
                 <small>Jabatan <?= levelUser(ucfirst($this->session->userdata('level'))) ?></small>
+								<small>
+									<?php
+
+									if($this->session->userdata('level') == 1) {
+										echo '';
+									} else if($this->session->userdata('level') == 2) {
+										echo '';
+									} else if($this->session->userdata('level') == 3) {
+										echo $this->session->userdata('nama_lapangan_yang_dikoordinir');
+									} else {
+										echo '';
+									}
+									?>
+								</small>
               </div>
             </a>
           </div>

@@ -124,7 +124,7 @@
 			load: function(query, callback) {
 				if (!query.length) return callback();
 				$.ajax({
-					url: '<?php echo base_url('admin/manage_admin/find_petugas') ?>',
+					url: '<?php echo base_url('admin/manage_admin/find_petugas_belum_ditugaskan') ?>',
 					type: 'GET',
 					dataType: 'json',
 					data: {
@@ -264,7 +264,7 @@
 		})
 
 		<?php
-		if($button == 'Update') {
+		if($button == 'Update' && $petugas != null) {
 			$getdataadmin = $this->db->get_where('tbl_admin', ['id' => $petugas])->row();
 			$idnya = $getdataadmin->id;
 			$usernamenya = $getdataadmin->username;

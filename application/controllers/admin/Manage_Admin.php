@@ -189,9 +189,9 @@ class Manage_admin extends CI_Controller
 		$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
 	}
 
-	public function find_petugas() {
+	public function find_petugas_belum_ditugaskan() {
 		$petugas_username = $this->input->get('q');
-		$data = $this->Manage_admin_model->find_admin_by_username($petugas_username, 3); // 3 = koordinator_lapangan
+		$data = $this->Manage_admin_model->find_petugas_koordinator_by_username_belum_ditugaskan($petugas_username, 3); // 3 = koordinator_lapangan
 
 		// output for selectize output
 		$output = [

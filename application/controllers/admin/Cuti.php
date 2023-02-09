@@ -248,7 +248,7 @@ class Cuti extends CI_Controller
 				'keterangan' => 'cuti',
 				'ip_address' => 'N/A',
 				'telat' => 0,
-				'status' => 9
+				'status' => 4
 			];
 
 			$this->Tbl_absensi_model->insert($datanya);
