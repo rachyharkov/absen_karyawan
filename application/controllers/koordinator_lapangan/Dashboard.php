@@ -13,6 +13,6 @@ class Dashboard extends CI_Controller
 
 	public function index()
 	{
-		$this->template->load('template', 'pengguna_berlevel/dashboard');
+		$this->template->load('template', 'pengguna_berlevel/dashboard_koordinator_lapangan');
 	}
 }
