@@ -69,7 +69,7 @@
 							</div>
 							<i class="fa fa-check-circle success-indicator" style="display: none;"></i>
 						</div>
-						<div class="d-flex gap-2 w-100 mt-2">
+						<div class="d-flex gap-2 w-100 mt-2 btn-act-photo">
 							<button id="start-camera" type="button" class="btn btn-danger w-100">Ambil Foto</button>
 							<button id="click-photo" type="button" class="btn w-100 btn-success" style="display: none;">Click Photo</button>
 						</div>
@@ -147,12 +147,16 @@
 			if (insidekah == false) {
 				insidekah = true
 				console.log('Inside')
+				$('.btn-act-photo').show()
+				$('.btn-act-absen').show()
 			}
 		} else {
 			insidekah = false
 			if (outsidekah == false) {
 				outsidekah = true
 				console.log('Outside')
+				$('.btn-act-photo').hide()
+				$('.btn-act-absen').hide()
 			}
 		}
 	}
