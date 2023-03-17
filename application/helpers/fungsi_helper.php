@@ -34,7 +34,7 @@ function cek_asal_lapangan($user_id) {
 	$ci->load->model('Manage_users_model');
 	$lapangan = $ci->Manage_users_model->getLapanganByUserId($user_id);
 
-	if($lapangan) {
+	if($lapangan->num_rows() > 0) {
 		return $lapangan->row()->id_lapangan;
 	} else {
 		return false;
@@ -209,7 +209,7 @@ function cek_apakah_lapangan_memiliki_koordinator($lapangan_id) {
 
 	$dataLapangan = $ci->db->query("SELECT * FROM tbl_lapangan WHERE id = $lapangan_id");
 
-	$apakahAdaKoordinatorLapangan = $dataLapangan->row()->petugas ? true : false;
+	$apakahAdaKoordinatorLapangan = $dataLapangan ? $dataLapangan->row()->petugas ? true : false : false;
 
 	return $apakahAdaKoordinatorLapangan;
 }
