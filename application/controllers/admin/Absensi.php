@@ -40,7 +40,7 @@ class Absensi extends CI_Controller
 		'telat' => $row->telat,
 		'status' => $row->status,
 	    );
-            $this->template->load('template','pengguna_berlevel/absensi/tbl_absensi_list', $data);
+            $this->template->load('template','pengguna_berlevel/absensi/tbl_absensi_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
             redirect(site_url(levelUser($this->session->userdata('level')).'absensi'));

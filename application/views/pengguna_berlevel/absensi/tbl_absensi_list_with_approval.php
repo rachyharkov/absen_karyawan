@@ -32,7 +32,7 @@
                   <thead>
                     <tr>
                       <th>No</th>
-                      <th>Users Id</th>
+                      <th>Nama</th>
                       <th>Tanggal</th>
                       <th>Jam</th>
                       <th>Latitude</th>

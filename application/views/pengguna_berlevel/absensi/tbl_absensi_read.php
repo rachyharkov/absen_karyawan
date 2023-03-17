@@ -13,6 +13,7 @@
 <div class="panel-body">
 <table id="data-table-default" class="table table-hover table-bordered table-td-valign-middle">
 	    <tr><td>Users Id</td><td><?php echo $users_id; ?></td></tr>
+			<tr><td>Nama Karyawan</td><td><?php echo get_nama_users($users_id) ?></td></tr>
 	    <tr><td>Tanggal</td><td><?php echo $tanggal; ?></td></tr>
 	    <tr><td>Jam</td><td><?php echo $jam; ?></td></tr>
 	    <tr><td>Latitude</td><td><?php echo $latitude; ?></td></tr>
