@@ -213,3 +213,12 @@ function cek_apakah_lapangan_memiliki_koordinator($lapangan_id) {
 
 	return $apakahAdaKoordinatorLapangan;
 }
+
+function get_nama_users($users_id) {
+	$ci = &get_instance();
+	$ci->load->model('User_model');
+
+	$users = $ci->User_model->get_by_id($users_id);
+
+	return $users->nama_lengkap;
+}

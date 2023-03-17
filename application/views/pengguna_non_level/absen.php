@@ -44,6 +44,13 @@
 			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 		</div>
 	</div>
+
+	<div class="alert-outside-area">
+		<div class="alert alert-success alert-dismissible fade show" role="alert">
+			<strong>Perhatian</strong> Lokasi anda diluar area yang ditentukan, silahkan bergeser ke area yang ditentukan.
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	</div>
 	<?php
 	if($masukataupulang != 'Sudah Absen') {
 		?>
@@ -69,7 +76,7 @@
 							</div>
 							<i class="fa fa-check-circle success-indicator" style="display: none;"></i>
 						</div>
-						<div class="d-flex gap-2 w-100 mt-2 btn-act-photo">
+						<div class="gap-2 w-100 mt-2 btn-act-photo">
 							<button id="start-camera" type="button" class="btn btn-danger w-100">Ambil Foto</button>
 							<button id="click-photo" type="button" class="btn w-100 btn-success" style="display: none;">Click Photo</button>
 						</div>
@@ -125,86 +132,89 @@
 	// initial hidden marker, and update on click
 	let getLocationMapMarker = L.marker(['-6.175392', '106.827153']).addTo(getLocationMap);
 
-	function getToLoc(lat, lng) {
-		const zoom = 17;
-		getLocationMap.setView(new L.LatLng(lat, lng), zoom);
-		
-		// remove old marker
-		if (getLocationMapMarker) {
-			getLocationMap.removeLayer(getLocationMapMarker)
-		}
-		// add new marker
-		getLocationMapMarker = L.marker([lat, lng]).addTo(getLocationMap);
-		getLocationMapMarker.setLatLng([lat, lng])
-
-		$('#latitude').val(lat)
-		$('#longitude').val(lng)
-
-		var d = getLocationMapMarker.getLatLng().distanceTo(myCircle.getLatLng());
-		var isInside = d < myCircle.getRadius();
-		if (isInside) {
-			outsidekah = false
-			if (insidekah == false) {
-				insidekah = true
-				console.log('Inside')
-				$('.btn-act-photo').show()
-				$('.btn-act-absen').show()
-			}
-		} else {
-			insidekah = false
-			if (outsidekah == false) {
-				outsidekah = true
-				console.log('Outside')
-				$('.btn-act-photo').hide()
-				$('.btn-act-absen').hide()
-			}
-		}
-	}
-
-	function createRadius(lat, lng, radius) {
-		myCircle = L.circle([lat, lng], {
-			color: 'red',
-			fillColor: '#f03',
-			fillOpacity: 0.5,
-			radius: radius
-		}).addTo(getLocationMap);
-	}
-
-	// get current location
-	function getCurrentLocation() {
-		if (navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(function(position) {
-				getToLoc(position.coords.latitude, position.coords.longitude)
-				
-				$('.alertnya').html('')
-			});
-		} else {
-			alert("Geolocation is not supported by this browser.");
-			$('.alertnya').html(`
-				<div class="alert alert-danger alert-dismissible fade show" role="alert">
-					<strong>Perhatian</strong> Izin lokasi harus diberikan untuk mengetahui lokasi anda.
-					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-				</div>
-			`)
-		}
-	}
-
-	function addLapanganRadius(){
-		$.ajax({
-			url: '<?= base_url('karyawan/absen/getLapanganRadius') ?>',
-			type: 'POST',
-			data: {
-				lapangan_id: '<?= $lapangan_id ?>'
-			},
-			success: function(res){
-				console.log(res)
-				res = JSON.parse(res)
-				createRadius(res.lat, res.lng, res.radius_diizinkan)
-			}
-		})
-	}
-
+	
 	$(document).ready(function() {
+		function getToLoc(lat, lng) {
+			const zoom = 17;
+			getLocationMap.setView(new L.LatLng(lat, lng), zoom);
+			
+			// remove old marker
+			if (getLocationMapMarker) {
+				getLocationMap.removeLayer(getLocationMapMarker)
+			}
+			// add new marker
+			getLocationMapMarker = L.marker([lat, lng]).addTo(getLocationMap);
+			getLocationMapMarker.setLatLng([lat, lng])
+	
+			$('#latitude').val(lat)
+			$('#longitude').val(lng)
+	
+			var d = getLocationMapMarker.getLatLng().distanceTo(myCircle.getLatLng());
+			var isInside = d < myCircle.getRadius();
+			if (isInside) {
+				outsidekah = false
+				if (insidekah == false) {
+					insidekah = true
+					console.log('Inside')
+					$('.btn-act-photo').show()
+					$('#btn-act-absen').show()
+					$('.alert-outside-area').hide()
+				}
+			} else {
+				insidekah = false
+				if (outsidekah == false) {
+					outsidekah = true
+					console.log('Outside')
+					$('.btn-act-photo').hide()
+					$('#btn-act-absen').hide()
+					$('.alert-outside-area').show()
+				}
+			}
+		}
+	
+		function createRadius(lat, lng, radius) {
+			myCircle = L.circle([lat, lng], {
+				color: 'red',
+				fillColor: '#f03',
+				fillOpacity: 0.5,
+				radius: radius
+			}).addTo(getLocationMap);
+		}
+	
+		// get current location
+		function getCurrentLocation() {
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(function(position) {
+					getToLoc(position.coords.latitude, position.coords.longitude)
+					
+					$('.alertnya').html('')
+				});
+			} else {
+				alert("Geolocation is not supported by this browser.");
+				$('.alertnya').html(`
+					<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						<strong>Perhatian</strong> Izin lokasi harus diberikan untuk mengetahui lokasi anda.
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				`)
+			}
+		}
+	
+		function addLapanganRadius(){
+			$.ajax({
+				url: '<?= base_url('karyawan/absen/getLapanganRadius') ?>',
+				type: 'POST',
+				data: {
+					lapangan_id: '<?= $lapangan_id ?>'
+				},
+				success: function(res){
+					console.log(res)
+					res = JSON.parse(res)
+					createRadius(res.lat, res.lng, res.radius_diizinkan)
+				}
+			})
+		}
+
 		addLapanganRadius()
 		setInterval(() => {
 			getCurrentLocation()

@@ -50,12 +50,12 @@
                 ?>
                     <tr>
                       <td><?= $no++?></td>
-                      <td><?php echo $absensi->users_id ?></td>
+                      <td><?php echo get_nama_users($absensi->users_id) ?></td>
                       <td><?php echo $absensi->tanggal ?></td>
                       <td><?php echo $absensi->jam ?></td>
                       <td><?php echo $absensi->latitude ?></td>
                       <td><?php echo $absensi->longitude ?></td>
-                      <td><?php echo $absensi->foto ?></td>
+                      <td><a href="<?php echo base_url('assets/assets/img/bukti_absen/' . $absensi->foto) ?>" target="_blank"><img src="<?php echo base_url('assets/assets/img/bukti_absen/' . $absensi->foto) ?>" width="50px" height="50px"></a></td>
                       <td><?php echo $absensi->ip_address ?></td>
                       <td><?php echo $absensi->telat ?></td>
                       <td><?php echo $absensi->status ?></td>
