@@ -64,7 +64,7 @@ class Manage_admin extends CI_Controller
         } else {
             $data = array(
 				'username' => $this->input->post('username',TRUE),
-				'password' => sha1($this->input->post('password',TRUE)),
+				'password' => encrypt_url($this->input->post('password',TRUE)),
 				'level' => $this->input->post('level',TRUE),
 				'photo' => 'default.jpg'
 	    	);
@@ -100,7 +100,7 @@ class Manage_admin extends CI_Controller
                 'action' => site_url(levelUser($this->session->userdata('level')).'/manage_admin/update_action'),
 				'id' => set_value('id', $row->id),
 				'username' => set_value('username', $row->username),
-				'password' => set_value('password', $row->password),
+				'password' => set_value('password', decrypt_url($row->password)),
 				'level' => set_value('level', $row->level),
 				'photo' => set_value('photo', $row->photo),
 	    	);
@@ -120,7 +120,7 @@ class Manage_admin extends CI_Controller
         } else {
             $data = array(
 				'username' => $this->input->post('username',TRUE),
-				'password' => $this->input->post('password',TRUE) ? sha1($this->input->post('password',TRUE)) : $this->input->post('old_password',TRUE),
+				'password' => encrypt_url($this->input->post('password',TRUE)),
 				'level' => $this->input->post('level',TRUE),
 				'photo' => $this->input->post('old_photo',TRUE),
 		    );

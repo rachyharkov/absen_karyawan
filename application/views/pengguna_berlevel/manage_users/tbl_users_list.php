@@ -1,5 +1,5 @@
 <div id="content" class="app-content">
-  <h1 class="page-header">DATA TBL_USERS</h1>
+  <h1 class="page-header">DATA USERS/KARYAWAN</h1>
   <div class="panel panel-inverse">
     <div class="panel-heading">
       <h4 class="panel-title"></h4>
@@ -32,6 +32,7 @@
                   <thead>
                     <tr>
                       <th>No</th>
+                      <th>Photo</th>
                       <th>Nama Lengkap</th>
                       <th>Jenis Kelamin</th>
                       <th>Alamat</th>
@@ -40,8 +41,6 @@
                       <th>No Telp</th>
                       <th>Username</th>
                       <th>Password</th>
-                      <th>Photo</th>
-                      <th>Status</th>
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -51,6 +50,7 @@
                 ?>
                     <tr>
                       <td><?= $no++?></td>
+                      <td><a href="<?php echo base_url('assets/assets/img/user/' . $manage_users->photo) ?>" target="_blank"><img src="<?php echo base_url('assets/assets/img/user/' . $manage_users->photo) ?>" width="50px" height="50px"></a></td>
                       <td><?php echo $manage_users->nama_lengkap ?></td>
                       <td><?php echo $manage_users->jenis_kelamin ?></td>
                       <td><?php echo $manage_users->alamat ?></td>
@@ -59,8 +59,6 @@
                       <td><?php echo $manage_users->no_telp ?></td>
                       <td><?php echo $manage_users->username ?></td>
                       <td><?php echo $manage_users->password ?></td>
-                      <td><?php echo $manage_users->photo ?></td>
-                      <td><?php echo $manage_users->status ?></td>
                       <td style="text-align:center" width="200px">
                         <?php 
 				echo anchor(site_url(levelUser($this->session->userdata('level')).'/manage_users/read/'.encrypt_url($manage_users->id)),'<i class="fas fa-eye" aria-hidden="true"></i>','class="btn btn-success btn-sm read_data"'); 

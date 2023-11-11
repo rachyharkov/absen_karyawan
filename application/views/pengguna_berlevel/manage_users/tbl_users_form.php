@@ -64,12 +64,12 @@
               <tr>
                 <td>Password <?php echo form_error('password') ?></td>
                 <td>
-									<input type="text" class="form-control" name="password" id="password" placeholder="Password"
+									<input type="password" class="form-control" name="password" id="password" placeholder="Password"
                     value="<?php echo $password; ?>" />
+									<input type="checkbox" id="showPassword" onclick="toggleShowPassword()"><label for="showPassword">Show Password</label><br>
 									<?php
 									if($button == 'Update') {
-										echo '<small class="text-danger">* Kosongkan jika tidak ingin mengubah password</small>';
-										echo '<input type="hidden" name="old_password" value="'.$password.'">';
+										echo '<small class="text-danger">* Biarkan jika tidak ingin mengubah password</small>';
 									}
 									?>
 								</td>
@@ -121,6 +121,14 @@
 
 
 <script type="text/javascript">
+	function toggleShowPassword() {
+		var x = document.getElementById("password");
+		if (x.type === "password") {
+			x.type = "text";
+		} else {
+			x.type = "password";
+		}
+	}
 	function validasiEkstensi() {
 		var inputFile = document.getElementById('photo');
 		var pathFile = inputFile.value;

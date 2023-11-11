@@ -28,15 +28,16 @@
               <tr>
                 <td>Password <?php echo form_error('password') ?></td>
                 <td><input type="password" class="form-control" name="password" id="password" placeholder="Password"
-                    value="" />
+                    value="<?= $password ?>" />
+										<input type="checkbox" id="showPassword" onclick="toggleShowPassword()"><label for="showPassword">Show Password</label><br>
 										<?php
 										if($button == 'Update') {
 											?>
-												<small class="text-danger">* Kosongkan jika tidak ingin mengubah password</small>
-												<input type="hidden" name="old_password" value="<?php echo $password; ?>">
+												<small class="text-danger">* Biarkan jika tidak ingin mengubah password</small>
 											<?php
 										}
 										?>
+										
 								</td>
               </tr>
               <tr>
@@ -108,6 +109,14 @@
 
 
 <script type="text/javascript">
+	function toggleShowPassword() {
+		var x = document.getElementById("password");
+		if (x.type === "password") {
+			x.type = "text";
+		} else {
+			x.type = "password";
+		}
+	}
 	function validasiEkstensi() {
 		var inputFile = document.getElementById('photo');
 		var pathFile = inputFile.value;
